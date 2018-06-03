@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="Business\ExtractorInvoker.cs" />
     <Compile Include="Business\NFSLineComparer.cs" />
+    <Compile Include="Business\TODO.cs" />
     <Compile Include="Business\Win000NFSReader.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
