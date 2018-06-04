@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 
 namespace OFDRExtractor.Model
 {
-	abstract class XmlSerializable : IXmlSerializable
+	public abstract class XmlSerializable : IXmlSerializable
 	{
 		public System.Xml.Schema.XmlSchema GetSchema()
 		{

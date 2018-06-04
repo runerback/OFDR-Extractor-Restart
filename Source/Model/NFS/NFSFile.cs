@@ -5,9 +5,10 @@ using System.Text;
 
 namespace OFDRExtractor.Model
 {
-	sealed class NFSFile : NFSLine
+	public sealed class NFSFile : NFSLine
 	{
-		public NFSFile(string filename, string extension, NFSFolder folder)
+		public NFSFile(string filename, string extension, NFSFolder folder, int index, int order, string name, long size)
+			: base(index, order, name, size)
 		{
 			this.filename = filename;
 			this.extension = extension;
@@ -32,14 +33,22 @@ namespace OFDRExtractor.Model
 			get { return this.folder; }
 		}
 
-		public override void ReadXml(System.Xml.XmlReader reader)
-		{
-			throw new NotImplementedException();
-		}
-
 		public override void WriteXml(System.Xml.XmlWriter writer)
 		{
-			throw new NotImplementedException();
+			writer.WriteStartElement("file");
+
+			writer.WriteStartAttribute("name");
+			writer.WriteValue(this.Name);
+			writer.WriteEndAttribute();
+
+			if (this.Order > 0)
+			{
+				writer.WriteStartAttribute("order");
+				writer.WriteValue(this.Order);
+				writer.WriteEndAttribute();
+			}
+
+			writer.WriteEndElement();
 		}
 
 		public override string ToString()
