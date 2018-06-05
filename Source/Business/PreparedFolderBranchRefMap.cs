@@ -12,24 +12,37 @@ namespace OFDRExtractor.Business
 		{
 			if (branches == null || !branches.Any())
 				throw new ArgumentNullException("branches");
+
+			var comparer = new PreparedFolderBranchNodeComparer();
 			this.refCountMap = branches
 				.SelectMany(item => item.Nodes)
-				.GroupBy(item => item, new PreparedFolderBranchNodeComparer())
-				.ToDictionary(item => item.Key, item => item.Count());
-
-			var AIRefCount = getRefCount("ai");
+				.GroupBy(item => item, comparer)
+				.ToDictionary(
+					item => item.Key, 
+					item => item.Count(),
+					comparer);
 		}
 
-		private readonly Dictionary<PreparedFolderBranchNode, int> refCountMap =
-			new Dictionary<PreparedFolderBranchNode, int>(new PreparedFolderBranchNodeComparer());
+		private readonly Dictionary<PreparedFolderBranchNode, int> refCountMap;
 		private readonly object mapLock = new object();
+
+		public int Count
+		{
+			get
+			{
+				lock (mapLock)
+				{
+					return this.refCountMap.Count;
+				}
+			}
+		}
 
 		public bool HasReference(PreparedFolderBranchNode node)
 		{
 			if (node == null)
 				throw new ArgumentNullException("node");
 
-			lock(mapLock)
+			lock (mapLock)
 				return this.refCountMap.ContainsKey(node);
 		}
 
@@ -41,10 +54,13 @@ namespace OFDRExtractor.Business
 			lock (mapLock)
 			{
 				int count;
-				if (this.refCountMap.TryGetValue(node, out count))
+				var map = this.refCountMap;
+				if (map.TryGetValue(node, out count))
 				{
 					if (--count == 0)
-						this.refCountMap.Remove(node);
+						map.Remove(node);
+					else
+						map[node] = count;
 				}
 				return count;
 			}
@@ -52,8 +68,19 @@ namespace OFDRExtractor.Business
 
 		private int getRefCount(string name)
 		{
-			return this.refCountMap.Keys
-				.Count(item => item.Name == name);
+			lock (mapLock)
+			{
+				int refCount = 0;
+				var nodes = this.refCountMap.Keys
+					.Where(item => item.Name == name);
+				foreach (var node in nodes)
+				{
+					int value;
+					if (this.refCountMap.TryGetValue(node, out value))
+						refCount += value;
+				}
+				return refCount;
+			}
 		}
 	}
 }

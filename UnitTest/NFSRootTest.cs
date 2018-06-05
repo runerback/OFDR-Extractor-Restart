@@ -25,9 +25,6 @@ namespace OFDRExtractor.UnitTest
 			Assert.IsNotNull(root);
 			Assert.IsTrue(root.Folders.Any());
 			this.nfsRoot = root;
-
-			//foreach (var folder in root.Folders)
-			//	Console.WriteLine(folder.Name);
 		}
 
 		private static readonly string filename = "nsf_root.xml";

@@ -22,29 +22,6 @@ namespace OFDRExtractor.Business
 		private readonly NFSFolder NFSRoot;
 		private readonly PreparedFolder PreparedRoot;
 
-		public bool TryBuild(out NFSFolder root)
-		{
-			root = null;
-
-			var preparedBranches = new PreparedFolderBranches(this.PreparedRoot);
-			var nfsFolders = this.NFSRoot.Folders.ToArray();
-			foreach (var branch in preparedBranches.Branches)
-			{
-				var nodes = branch.Nodes;
-				//match whole branch
-				using (var nodeIterator = nodes.GetEnumerator())
-				{
-					NFSFolder nfsNode = null;
-					while (nodeIterator.MoveNext())
-					{
-						throw new NotImplementedException();
-					}
-				}
-			}
-
-			return false;
-		}
-
 		[Obsolete("not work")]
 		private IDictionary<string, NFSFolder> buildNFSFolderBranchMap(NFSFolder root)
 		{

@@ -5,46 +5,46 @@ using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OFDRExtractor.Model;
 using OFDRExtractor.Business;
+using System.IO;
 
 namespace OFDRExtractor.UnitTest
 {
 	[TestClass]
 	public class TwoRootTest
 	{
-		private readonly NFSRootTest nfs = new NFSRootTest();
-		private readonly PreparedRootTest prepared = new PreparedRootTest();
+		private readonly string branchData = @"branches.txt";
+
+		private NFSRootTest nfs = new NFSRootTest();
+		private PreparedFolderBranches branchesContainer;
 
 		[TestInitialize]
-		public void LoadTwoRoot()
+		public void InitializeTwoRootTest()
 		{
 			nfs.ReadNFSRoot();
-			prepared.ReadPreparedRoot();
-		}
-
-		[TestMethod]
-		public void CompareTwoTree()
-		{
-			var nfsRoot = this.nfs.Root;
-			var preparedRoot = this.prepared.Root;
-
-			Assert.IsFalse(new FolderTreeComparer()
-				.AreEqual(nfsRoot, preparedRoot));
+			Assert.IsTrue(File.Exists(branchData), "branches data missing");
+			var lines = File.ReadAllLines(branchData);
+			Assert.IsTrue(lines != null && lines.Length > 0, "empty branches");
+			this.branchesContainer = new PreparedFolderBranches(lines);
 		}
 
 		[TestMethod]
 		public void CheckNFSFolder()
 		{
 			var nfsRoot = this.nfs.Root;
-			var preparedRoot = this.prepared.Root;
 
-			var preparedBranches = new PreparedFolderBranches(preparedRoot);
-			var nodeRefCountMap = preparedBranches.CreateRefMap();
+			var branchesContainer = this.branchesContainer;
+			var branches = branchesContainer.Branches;
+			var nodeRefCountMap = branchesContainer.CreateRefMap();
 
 			var nfsFolders = nfsRoot.Folders.ToList();
-			foreach (var branch in preparedBranches.Branches)
+
+			int startCount = nfsFolders.Count;
+			int totalNodesCount = nodeRefCountMap.Count;
+
+			foreach (var branch in branches)
 			{
 				var nodes = branch.Nodes;
-				int nodesCount = nodes.Count();
+				int nodesCount = branch.NodeCount;
 
 				var matchedStack = new Stack<NFSFolderNodePair>(nodesCount);
 				foreach (var node in nodes)
@@ -70,19 +70,24 @@ namespace OFDRExtractor.UnitTest
 
 						var folder = pair.Folder;
 						var node = pair.Node;
-						if (nodeRefCountMap.DecreaseReferenceCount(node) == 0)
-						{
+
+						int refCount = nodeRefCountMap.DecreaseReferenceCount(node);
+						if (refCount  == 0)
 							nfsFolders.Remove(folder);
-						}
 
 						if (subFolder != null)
 						{
 							folder.Add(subFolder);
 						}
+						if (matchedStack.Count == 0) break;
 						subFolder = folder;
 					}
 				}
 			}
+
+			Assert.AreEqual(totalNodesCount, startCount - nfsFolders.Count);
+			Assert.AreEqual(0, nfsFolders.Count,
+				string.Format("still some remained: {0}", string.Join(", ", nfsFolders.Select(item => item.Name))));
 		}
 
 		class NFSFolderNodePair
@@ -116,18 +121,6 @@ namespace OFDRExtractor.UnitTest
 			{
 				return this.node.Name;
 			}
-		}
-
-		[TestMethod]
-		public void BuildNFSTree()
-		{
-			var preparedRoot = this.prepared.Root;
-			var builder = new NFSTreeBuilder(this.nfs.Root, preparedRoot);
-			NFSFolder result;
-			Assert.IsTrue(builder.TryBuild(out result));
-			Assert.IsNotNull(result);
-			Assert.IsTrue(new Business.FolderTreeComparer()
-				.AreEqual(result, preparedRoot));
 		}
 	}
 }
