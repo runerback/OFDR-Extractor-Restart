@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
 using System.Text;
+using OFDRExtractor.Model;
 
 namespace OFDRExtractor.UnitTest
 {
@@ -38,6 +39,28 @@ namespace OFDRExtractor.UnitTest
 			{
 				stream.WriteTo(output);
 			}
+		}
+
+		[TestMethod]
+		public void CopyNFSFolder()
+		{
+			var root = NFSFolder.CreateRoot();
+
+			var folder1 = new NFSFolder(1, "Folder 1");
+			var folder2 = new NFSFolder(2, "Folder 2");
+
+			root.Add(folder1);
+			root.Add(folder2);
+
+			var copyRoot = root.Copy();
+
+			Assert.AreNotSame(folder1, copyRoot.Folders.First());
+			Assert.AreNotSame(folder2, copyRoot.Folders.ElementAt(1));
+
+			folder1.Add(folder2);
+
+			Assert.AreSame(root.Folders.First().Folders.First(), folder2);
+			Assert.IsFalse(copyRoot.Folders.First().Folders.Any());
 		}
 	}
 }

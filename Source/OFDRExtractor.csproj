@@ -48,10 +48,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Business\ExtractorInvoker.cs" />
+    <Compile Include="Business\FolderTreeCompareLevel.cs" />
     <Compile Include="Business\FolderTreeComparer.cs" />
     <Compile Include="Business\NFSLineComparer.cs" />
     <Compile Include="Business\NFSTreeBuilder.cs" />
-    <Compile Include="Business\PreparedFolderBranches.cs" />
+    <Compile Include="Business\PreparedFolderBranchesManager.cs" />
     <Compile Include="Business\PreparedFolderBranchNodeComparer.cs" />
     <Compile Include="Business\PreparedFolderBranchRefMap.cs" />
     <Compile Include="Business\TODO.cs" />

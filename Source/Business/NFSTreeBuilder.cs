@@ -8,19 +8,123 @@ namespace OFDRExtractor.Business
 {
 	public sealed class NFSTreeBuilder
 	{
-		public NFSTreeBuilder(NFSFolder nfsRoot, PreparedFolder preparedRoot)
+		public NFSTreeBuilder(NFSFolder nfsRoot, PreparedFolderBranchesManager branchesManager)
 		{
 			if (nfsRoot == null)
 				throw new ArgumentNullException("nfsRoot");
-			if (preparedRoot == null)
-				throw new ArgumentNullException("preparedRoot");
+			if (branchesManager == null)
+				throw new ArgumentNullException("branchesManager");
 
-			this.NFSRoot = nfsRoot.Copy();
-			this.PreparedRoot = preparedRoot.Copy();
+			this.nfsRoot = nfsRoot.Copy();
+			this.branchesManager = branchesManager;
 		}
 
-		private readonly NFSFolder NFSRoot;
-		private readonly PreparedFolder PreparedRoot;
+		private readonly NFSFolder nfsRoot;
+		private readonly PreparedFolderBranchesManager branchesManager;
+		private readonly object buildLock = new object();
+
+		private NFSFolder GetRoot()
+		{
+			return this.nfsRoot.Copy();
+		}
+
+		public NFSFolder Build()
+		{
+			lock (buildLock)
+			{
+				var root = NFSFolder.CreateRoot();
+				var nfsFolders = this.GetRoot().Folders.ToList();
+
+				var branchesManager = this.branchesManager;
+				var branches = branchesManager.Branches;
+				var nodeRefCountMap = branchesManager.CreateRefMap();
+
+				foreach (var branch in branches)
+				{
+					var nodes = branch.Nodes;
+					int nodesCount = branch.NodeCount;
+
+					var matchedStack = new Stack<NFSFolderNodePair>(nodesCount);
+					foreach (var node in nodes)
+					{
+						var folder = nfsFolders
+							.FirstOrDefault(item => item.Name == node.Name);
+						if (folder == null) break;
+
+						matchedStack.Push(new NFSFolderNodePair(folder, node));
+					}
+
+					if (matchedStack.Count != nodesCount)
+						throw new Exception(string.Format("[{0}] not match to [{1}]",
+							string.Join(", ", matchedStack.Select(item => item.Folder.Name)),
+							branch.FullPath));
+
+					//add inner folder to outer parent folder
+					NFSFolder subFolder = null;
+					while (matchedStack.Count > 0)
+					{
+						var pair = matchedStack.Pop();
+
+						var folder = pair.Folder;
+						var node = pair.Node;
+
+						int refCount = nodeRefCountMap.DecreaseReferenceCount(node);
+						if (refCount == 0)
+							nfsFolders.Remove(folder);
+
+						if (subFolder != null)
+							folder.Add(subFolder);
+
+						if (matchedStack.Count == 0)
+						{
+							root.Add(folder);
+							break;
+						}
+
+						subFolder = folder;
+					}
+				}
+
+				if (nfsFolders.Count != 0)
+					throw new Exception(
+						string.Format("Unassigned folders: {0}", string.Join(", ", nfsFolders.Select(item => item.Name))));
+
+				return root;
+			}
+		}
+
+		class NFSFolderNodePair
+		{
+			public NFSFolderNodePair(NFSFolder folder, PreparedFolderBranchNode node)
+			{
+				if (folder == null)
+					throw new ArgumentNullException("folder");
+				if (node == null)
+					throw new ArgumentNullException("node");
+				if (folder.Name != node.Name)
+					throw new ArgumentException("folder and node are mismatched");
+
+				this.folder = folder;
+				this.node = node;
+			}
+
+			private readonly NFSFolder folder;
+			public NFSFolder Folder
+			{
+				get { return this.folder; }
+			}
+
+			private readonly PreparedFolderBranchNode node;
+			public PreparedFolderBranchNode Node
+			{
+				get { return this.node; }
+			}
+
+			public override string ToString()
+			{
+				return this.node.Name;
+			}
+		}
 
 		[Obsolete("not work")]
 		private IDictionary<string, NFSFolder> buildNFSFolderBranchMap(NFSFolder root)

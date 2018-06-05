@@ -9,7 +9,7 @@ namespace OFDRExtractor.Business
 	/// <summary>
 	/// all branches start from layer 1 (direct sub folder of data_win)
 	/// </summary>
-	public sealed class PreparedFolderBranches
+	public sealed class PreparedFolderBranchesManager
 	{
 		#region obsolated
 
@@ -60,7 +60,7 @@ namespace OFDRExtractor.Business
 
 		#endregion obsolated
 
-		public PreparedFolderBranches(IEnumerable<string> branches)
+		public PreparedFolderBranchesManager(IEnumerable<string> branches)
 		{
 			this.branches = validate(BuildBranches(branches));
 		}
