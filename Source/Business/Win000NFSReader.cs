@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Windows.Forms;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -43,11 +41,9 @@ namespace OFDRExtractor.Business
 		private void onExtractorInvoked(object sender, ExtractorInvokedEventArgs e)
 		{
 			if (e.HasError)
-				MessageBox.Show(e.Error);
+				throw new Exception("extractor. " + e.Error);
 			else
-			{
 				this.nfsLines = e.HasOutput ? e.Output : null;
-			}
 			this.nfsReadBlock.Set();
 		}
 	}

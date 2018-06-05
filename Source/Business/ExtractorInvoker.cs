@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.IO;
-using System.Diagnostics;
-using System.Windows.Forms;
 
 namespace OFDRExtractor.Business
 {
@@ -16,7 +15,7 @@ namespace OFDRExtractor.Business
 		{
 			if (!File.Exists(filename))
 				throw new FileNotFoundException(filename);
-			Application.ApplicationExit += onApplicationExiting;
+			AppDomain.CurrentDomain.ProcessExit += onDomainExiting;
 		}
 
 		private Process currentProcess = null;
@@ -46,8 +45,6 @@ namespace OFDRExtractor.Business
 
 			this.currentProcess = process;
 			runProcess(process);
-
-			//process.WaitForExit();
 		}
 
 		public event EventHandler<ExtractorInvokedEventArgs> ExtractorInvoked;
@@ -55,23 +52,6 @@ namespace OFDRExtractor.Business
 		private void onProcessExiting(object sender, EventArgs e)
 		{
 			var process = (Process)sender;
-
-			//string error = process.StandardError.ReadToEnd();
-			//string output = process.StandardOutput.ReadToEnd();
-
-			//this.currentProcess = null;
-
-			//string[] outputDatas = string.IsNullOrEmpty(output) ?
-			//    null :
-			//    output.Split(
-			//        new string[] { Environment.NewLine },
-			//        StringSplitOptions.RemoveEmptyEntries);
-
-			//if (this.ExtractorInvoked != null)
-			//{
-			//    var args = new ExtractorInvokedEventArgs(outputDatas, error);
-			//    this.ExtractorInvoked(this, args);
-			//}
 
 			process.CancelErrorRead();
 			process.CancelOutputRead();
@@ -90,23 +70,6 @@ namespace OFDRExtractor.Business
 				this.ExtractorInvoked(this, args);
 			}
 		}
-
-		//private void onProcessDisposed(object sender, EventArgs e)
-		//{
-		//    this.currentProcess = null;
-
-		//    var outputs = this.outputDatas.ToArray();
-		//    string errors = this.errorBuilder.Length > 0 ? this.errorBuilder.ToString() : null;
-
-		//    this.outputDatas.Clear();
-		//    this.errorBuilder.Clear();
-
-		//    if (this.ExtractorInvoked != null)
-		//    {
-		//        var args = new ExtractorInvokedEventArgs(outputs, errors);
-		//        this.ExtractorInvoked(this, args);
-		//    }
-		//}
 
 		private readonly StringBuilder errorBuilder = new StringBuilder();
 
@@ -137,7 +100,9 @@ namespace OFDRExtractor.Business
 			process.BeginOutputReadLine();
 		}
 
-		private void onApplicationExiting(object sender, EventArgs e)
+		#region Dispose
+
+		private void onDomainExiting(object sender, EventArgs e)
 		{
 			this.Dispose(true);
 		}
@@ -159,6 +124,9 @@ namespace OFDRExtractor.Business
 			this.Dispose(true);
 			GC.SuppressFinalize(this);
 		}
+
+		#endregion Dispose
+
 	}
 
 	public sealed class ExtractorInvokedEventArgs : EventArgs

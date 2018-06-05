@@ -14,4 +14,6 @@ namespace OFDRExtractor.Business
 	//-------------------------------update 2-----------------------------------------------//
 	//use branches.txt directly because it's ordered. build branches from file system will break order.
 	//so the prepared branches will be loaded from branches.txt now.
+	//-------------------------------update 3-----------------------------------------------//
+	//set related core file as EmbedResources and never output, only expose branches.txt (which is made by myself...)
 }
