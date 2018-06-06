@@ -6,7 +6,7 @@ using System.Text;
 
 namespace OFDRExtractor.GUI.Model
 {
-	sealed class FileData : ViewModelBase
+	sealed class FileData : SelectableBase
 	{
 		public FileData(NFSFile file)
 		{

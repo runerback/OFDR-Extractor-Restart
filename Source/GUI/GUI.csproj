@@ -55,7 +55,9 @@
     <Compile Include="Business\AppExitingHandler.cs" />
     <Compile Include="Business\ExceptionWrapper.cs" />
     <Compile Include="Business\IPopupController.cs" />
+    <Compile Include="Business\FileDataEnumerate.cs" />
     <Compile Include="Business\Popup.cs" />
+    <Compile Include="Business\SelectableManager.cs" />
     <Compile Include="Business\Unpack\NFSRootLoader.cs" />
     <Compile Include="Business\Unpack\Unpacker.cs" />
     <Compile Include="Controls\BusyLayer.cs" />
@@ -65,9 +67,17 @@
     <Compile Include="Controls\ProgressReporter.cs" />
     <Compile Include="Model\FileData.cs" />
     <Compile Include="Model\FolderData.cs" />
+    <Compile Include="Business\ISelectable.cs" />
+    <Compile Include="Model\SelectableBase.cs" />
+    <Compile Include="Mvvm\AutoInvokeObservableCollection.cs" />
     <Compile Include="Mvvm\Behaviors\CloseWindowBehavior.cs" />
     <Compile Include="Mvvm\Behaviors\DragMoveBehavior.cs" />
+    <Compile Include="Mvvm\BindingDataGizmo.cs" />
+    <Compile Include="Mvvm\Converters\AntiVisibilityConverter.cs" />
+    <Compile Include="Mvvm\Converters\UnboxConverter.cs" />
     <Compile Include="Mvvm\Converters\VisibilityConverter.cs" />
+    <Compile Include="Mvvm\DelegateCommand.cs" />
+    <Compile Include="Mvvm\RelayCommand.cs" />
     <Compile Include="Mvvm\SimpleCommand.cs" />
     <Compile Include="Mvvm\ViewModelBase.cs" />
     <Compile Include="Business\Unpack\OFDRUnpacker.cs" />

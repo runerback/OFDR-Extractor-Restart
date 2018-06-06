@@ -7,7 +7,7 @@ using System.Text;
 
 namespace OFDRExtractor.GUI.Model
 {
-	sealed class FolderData : ViewModelBase
+	sealed class FolderData : SelectableBase
 	{
 		public FolderData(NFSFolder folder)
 		{
@@ -35,12 +35,12 @@ namespace OFDRExtractor.GUI.Model
 			get { return this.name; }
 		}
 
-		private readonly ObservableCollection<FolderData> subFolders;
+		private readonly AutoInvokeObservableCollection<FolderData> subFolders;
 		public IEnumerable<FolderData> SubFolders
 		{
 			get { return this.subFolders; }
 		}
-		private readonly ObservableCollection<FileData> files;
+		private readonly AutoInvokeObservableCollection<FileData> files;
 		public IEnumerable<FileData> Files
 		{
 			get { return this.files; }
