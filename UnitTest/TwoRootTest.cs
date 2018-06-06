@@ -24,7 +24,9 @@ namespace OFDRExtractor.UnitTest
 			Assert.IsTrue(File.Exists(branchData), "branches data missing");
 			var lines = File.ReadAllLines(branchData);
 			Assert.IsTrue(lines != null && lines.Length > 0, "empty branches");
-			this.branchesManager = new PreparedFolderBranchesManager(lines);
+			this.branchesManager = new PreparedFolderBranchesManager(
+				lines,
+				new ProgressReporterInConsole());
 		}
 
 		[TestMethod]

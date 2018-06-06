@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace OFDRExtractor.Model
@@ -33,6 +34,12 @@ namespace OFDRExtractor.Model
 			get { return this.folders; }
 		}
 
+		private NFSFolder parentFolder = null;
+		public NFSFolder ParentFolder
+		{
+			get { return this.parentFolder; }
+		}
+
 		public void Add(NFSFolder folder)
 		{
 			if (folder == null)
@@ -40,6 +47,7 @@ namespace OFDRExtractor.Model
 
 			if (this.folders.Contains(folder)) return;
 
+			folder.parentFolder = this;
 			this.folders.Add(folder);
 		}
 
@@ -83,25 +91,48 @@ namespace OFDRExtractor.Model
 			return folder;
 		}
 
-		public static NFSFolder Load(IEnumerable<string> nfsLines)
+		public static Task<NFSFolder> Load(IEnumerable<string> nfsLines, IProgressReporter reporter)
 		{
-			var root = NFSFolder.CreateRoot();
-			if (nfsLines == null || !nfsLines.Any())
-				return root;
+			return Task.Factory.StartNew(() =>
+			{
+				bool report = reporter != null;
+				if (report)
+					reporter.Start("read nfs folders");
 
-			foreach (var folder in new NFSFoldersReader(nfsLines).Read())
-				root.Add(folder);
-			return root;
+				var root = NFSFolder.CreateRoot();
+				if (nfsLines == null || !nfsLines.Any())
+				{
+					if (report)
+						reporter.Complete("nfs folders loaded");
+					return root;
+				}
+
+				var reader = new NFSFoldersReader(nfsLines);
+				if (report)
+				{
+					reader.ProgressChanged += (_, e) =>
+					{
+						reporter.Report(e.Percent, e.Status);
+					};
+				}
+
+				foreach (var folder in reader.Read())
+					root.Add(folder);
+
+				if (report)
+					reporter.Complete("nfs folders loaded");
+				return root;
+			});
 		}
 
-		class NFSFoldersReader
+		class NFSFoldersReader : IProgressChanged
 		{
 			public NFSFoldersReader(IEnumerable<string> nfsLines)
 			{
-				this.nfsLines = nfsLines;
+				this.nfsLines = nfsLines.ToArray();
 			}
 
-			private readonly IEnumerable<string> nfsLines;
+			private readonly string[] nfsLines;
 			private readonly object readLock = new object();
 			private readonly Dictionary<string, int> fileOrderMap = new Dictionary<string, int>();
 
@@ -112,17 +143,21 @@ namespace OFDRExtractor.Model
 					@"^(?<file>(?<filename>.*?)\.(?<extension>.*?))\s+(?<size>\d+)$",
 					RegexOptions.Compiled);
 
-			public NFSFolder[] Read()
+			public IEnumerable<NFSFolder> Read()
 			{
 				lock (readLock)
 				{
 					this.fileOrderMap.Clear();
-					return readLines().ToArray();
+					return readLines();
 				}
 			}
 
 			private IEnumerable<NFSFolder> readLines()
 			{
+				var lines = this.nfsLines;
+				int total = lines.Length;
+				double current = 0;
+
 				var folderRegex = this.folderRegex;
 				var fileRegex = this.fileRegex;
 
@@ -131,8 +166,10 @@ namespace OFDRExtractor.Model
 
 				NFSFolder currentFolder = null;
 				string previousFolderName = null;
-				foreach (var line in nfsLines)
+				foreach (var line in lines)
 				{
+					raiseProgressChanged(current++ / total, string.Format("reading \"{0}\"", line));
+
 					var folderMatch = folderRegex.Match(line);
 					if (folderMatch.Success)
 					{
@@ -187,6 +224,13 @@ namespace OFDRExtractor.Model
 					map.Add(name, 0);
 					return 0;
 				}
+			}
+
+			public event EventHandler<ProgressChangedEventArgs> ProgressChanged;
+			private void raiseProgressChanged(double percent, string status)
+			{
+				if (this.ProgressChanged != null)
+					this.ProgressChanged(this, new ProgressChangedEventArgs(percent, status));
 			}
 		}
 	}

@@ -15,6 +15,9 @@ namespace OFDRExtractor.Model
 
 		protected NFSLine(int index, int order, string name, long size)
 		{
+			if (string.IsNullOrEmpty(name))
+				throw new ArgumentNullException("name");
+
 			this.index = index;
 			this.order = order;
 			this.name = name;

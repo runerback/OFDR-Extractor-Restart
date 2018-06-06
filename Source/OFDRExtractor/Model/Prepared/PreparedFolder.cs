@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace OFDRExtractor.Model
@@ -49,16 +50,34 @@ namespace OFDRExtractor.Model
 				this.Folders.Count);
 		}
 
-		public static PreparedFolder Load(string rootPath)
+		public static Task<PreparedFolder> Load(string rootPath, IProgressReporter reporter)
 		{
 			if (string.IsNullOrEmpty(rootPath))
 				throw new ArgumentNullException("rootPath");
 			if (!Directory.Exists(rootPath))
 				throw new DirectoryNotFoundException(rootPath);
-			return new PreparedRootFolderReader().Read(rootPath);
+			return Task.Factory.StartNew(() =>
+			{
+				var reader = new PreparedRootFolderReader();
+				bool report = reporter != null;
+				if (report)
+				{
+					reporter.Start("read prepared folders");
+					reader.ProgressChanged += (_, e) =>
+					{
+						reporter.Report(e.Percent, e.Status);
+					};
+				}
+				var root = reader.Read(rootPath);
+
+				if (report)
+					reporter.Complete("prepared folders loaded");
+
+				return root;
+			});
 		}
 
-		class PreparedRootFolderReader
+		class PreparedRootFolderReader : IProgressChanged
 		{
 			public PreparedFolder Read(string rootPath)
 			{
@@ -67,19 +86,55 @@ namespace OFDRExtractor.Model
 				if (!Directory.Exists(rootPath))
 					throw new DirectoryNotFoundException(rootPath);
 
-				return read(rootPath);
+				int total = Directory.EnumerateDirectories(rootPath, "*", SearchOption.AllDirectories).Count();
+				return read(rootPath, new Progress(total));
 			}
 
-			private PreparedFolder read(string path)
+			private PreparedFolder read(string path, Progress progress)
 			{
-				var folder = new PreparedFolder(Path.GetFileName(path));
+				string folderName = Path.GetFileName(path);
+				var folder = new PreparedFolder(folderName);
+				raiseProgressChanged(progress.Next(), folderName);
 
 				folder.Files.AddRange(Directory.GetFiles(path)
 					.Select(Path.GetFileName)
 					.Select(item => new PreparedFile(item)));
-				folder.Folders.AddRange(Directory.GetDirectories(path).Select(read));
+				foreach (var subPath in Directory.GetDirectories(path))
+					folder.Folders.Add(read(subPath, progress));
 
 				return folder;
+			}
+
+			class Progress
+			{
+				public Progress(int total)
+				{
+					this.total = total;
+				}
+
+				private int current = 0;
+				public int Current
+				{
+					get { return this.current; }
+				}
+
+				private int total;
+				public int Total
+				{
+					get { return this.total; }
+				}
+
+				public double Next()
+				{
+					return (double)(this.current++) / this.total;
+				}
+			}
+
+			public event EventHandler<ProgressChangedEventArgs> ProgressChanged;
+			private void raiseProgressChanged(double percent, string status)
+			{
+				if (this.ProgressChanged != null)
+					this.ProgressChanged(this, new ProgressChangedEventArgs(percent, status));
 			}
 		}
 	}

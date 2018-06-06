@@ -13,56 +13,11 @@ namespace OFDRExtractor.Business
 	{
 		#region obsolated
 
-		/*
-		public PreparedFolderBranches(PreparedFolder root)
-		{
-			if (root == null)
-				throw new ArgumentNullException("root");
-			this.branches = BuildBranches(root).ToArray();
-		}
-		
-		private IEnumerable<PreparedFolderBranch> BuildBranches(PreparedFolder folder)
-		{
-			Stack<PreparedFolder> folderStack = new Stack<PreparedFolder>();
-			Stack<IEnumerator<PreparedFolder>> iteratorStack = new Stack<IEnumerator<PreparedFolder>>();
-
-			iteratorStack.Push(folder.Folders.GetEnumerator());
-			bool pushed = true;
-
-			while (folderStack.Count > 0 || iteratorStack.Count > 0)
-			{
-				var iterator = iteratorStack.Peek();
-
-				if (!iterator.MoveNext())
-				{
-					if (pushed)
-					{
-						yield return new PreparedFolderBranch(folderStack
-							.Select(item => item.Name)
-							.Reverse());
-					}
-
-					if (folderStack.Count > 0)
-						folderStack.Pop();
-					iteratorStack.Pop();
-					iterator.Dispose();
-					pushed = false;
-				}
-				else
-				{
-					iteratorStack.Push(iterator.Current.Folders.GetEnumerator());
-					folderStack.Push(iterator.Current);
-					pushed = true;
-				}
-			}
-		}
-		*/
-
 		#endregion obsolated
 
-		public PreparedFolderBranchesManager(IEnumerable<string> branches)
+		public PreparedFolderBranchesManager(IEnumerable<string> branches, IProgressReporter reporter)
 		{
-			this.branches = validate(BuildBranches(branches));
+			this.branches = validate(BuildBranches(branches), reporter);
 		}
 
 		private readonly IEnumerable<PreparedFolderBranch> branches;
@@ -81,12 +36,25 @@ namespace OFDRExtractor.Business
 
 		//validate same node in differenct branch, one branch is contained in another branch compare from start
 		//such as `a/b/c` and `a/b', not 'a/b/c/d` and 'a/b/c/e', not 'b/c' and 'a/b/c'
-		private PreparedFolderBranch[] validate(IEnumerable<PreparedFolderBranch> branches)
+		private PreparedFolderBranch[] validate(IEnumerable<PreparedFolderBranch> branches, IProgressReporter reporter)
 		{
+			bool report = reporter != null;
+
 			var items = branches.ToArray();
 
-			if (items.Length == 0) 
+			if(report)
+				reporter.Report(0, "reading branches");
+
+			int total = items.Length;
+
+			if (total == 0)
+			{
+				if (report)
+					reporter.Report(1, "branches loaded");
 				return items;
+			}
+
+			int currentIndex = 0;
 
 			using (var branchIterator = branches
 				.OrderBy(item => item.FullPath)
@@ -94,20 +62,38 @@ namespace OFDRExtractor.Business
 			{
 				branchIterator.MoveNext();
 				var previous = branchIterator.Current;
+
+				if (report)
+					reporter.Report(
+						(double)(currentIndex++) / total,
+						string.Format("reading branch \"{0}\"", previous.FullPath));
+
 				while (branchIterator.MoveNext())
 				{
 					var current = branchIterator.Current;
+
+					if (report)
+						reporter.Report(
+							(double)(currentIndex++) / total,
+							string.Format("reading branch \"{0}\"", current.FullPath));
+
 					if (current.IsStartsWith(previous.FullPath))
+					{
+						if (report)
+							reporter.Report(0, null);
 						throw new ArgumentException(
 							string.Format("reduplicated branches : {0} - {1}", previous.FullPath, current.FullPath));
+					}
 					previous = current;
 				}
 			}
 
+			if (report)
+				reporter.Report(1, "branches loaded");
 			return items;
 		}
 
-		public PreparedFolderBranchRefMap CreateRefMap()
+		internal PreparedFolderBranchRefMap CreateRefMap()
 		{
 			return new PreparedFolderBranchRefMap(this.branches);
 		}

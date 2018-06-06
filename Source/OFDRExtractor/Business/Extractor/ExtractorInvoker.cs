@@ -7,7 +7,7 @@ using System.Text;
 
 namespace OFDRExtractor.Business
 {
-	sealed class ExtractorInvoker : IDisposable
+	public sealed class ExtractorInvoker : IDisposable
 	{
 		private static readonly string filename = Directory.GetCurrentDirectory() + @"\dat.exe";
 

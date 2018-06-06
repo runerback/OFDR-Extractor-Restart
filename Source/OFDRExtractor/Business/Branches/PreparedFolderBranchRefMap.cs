@@ -6,7 +6,7 @@ using System.Text;
 
 namespace OFDRExtractor.Business
 {
-	public sealed class PreparedFolderBranchRefMap
+	sealed class PreparedFolderBranchRefMap
 	{
 		public PreparedFolderBranchRefMap(IEnumerable<PreparedFolderBranch> branches)
 		{

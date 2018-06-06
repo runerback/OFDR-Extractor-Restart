@@ -68,6 +68,22 @@ namespace OFDRExtractor.GUI
 			this.Progress = percent * 1000;
 		}
 
+		void IProgressReporter.Report(double percent, string status)
+		{
+			this.Progress = percent * 1000;
+			this.Status = status;
+		}
+
+		void IProgressReporter.Start(string status)
+		{
+			((IProgressReporter)this).Report(0, status);
+		}
+
+		void IProgressReporter.Complete(string status)
+		{
+			((IProgressReporter)this).Report(1, status);
+		}
+
 		#endregion IProgressReporter
 
 		

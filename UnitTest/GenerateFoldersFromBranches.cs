@@ -32,7 +32,6 @@ namespace OFDRExtractor.UnitTest
 				foreach (var branch in branches)
 				{
 					var path = Path.Combine(root, branch);
-					Console.WriteLine("creating {0}", branch);
 					Directory.CreateDirectory(path);
 				}
 			}

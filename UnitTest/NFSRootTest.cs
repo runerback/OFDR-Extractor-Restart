@@ -22,7 +22,9 @@ namespace OFDRExtractor.UnitTest
 		public void ReadNFSRoot()
 		{
 			var lines = File.ReadAllLines("lines.txt");
-			var root = Model.NFSFolder.Load(lines);
+			var root = Model.NFSFolder
+				.Load(lines, new ProgressReporterInConsole(false))
+				.Result;
 			Assert.IsNotNull(root);
 			Assert.IsTrue(root.Folders.Any());
 			this.nfsRoot = root;

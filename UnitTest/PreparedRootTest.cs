@@ -17,7 +17,9 @@ namespace OFDRExtractor.UnitTest
 		[TestInitialize]
 		public void ReadPreparedRoot()
 		{
-			var root = Model.PreparedFolder.Load("../../data_win");
+			var root = Model.PreparedFolder
+				.Load("../../data_win", new ProgressReporterInConsole(false))
+				.Result;
 			Assert.IsNotNull(root);
 			Assert.IsTrue(root.Folders.Any());
 			this.preparedRoot = root;

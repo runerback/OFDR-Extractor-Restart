@@ -55,13 +55,8 @@
     <Compile Include="GenerateFoldersFromBranches.cs" />
     <Compile Include="NFSRootTest.cs" />
     <Compile Include="PreparedRootTest.cs" />
+    <Compile Include="ProgressReporterInConsole.cs" />
     <Compile Include="TwoRootTest.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Source\OFDRExtractor.csproj">
-      <Project>{1c75da1a-26ac-4156-b794-7d8c41f5ded5}</Project>
-      <Name>OFDRExtractor</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="lines.txt">
@@ -75,6 +70,16 @@
     <None Include="branches.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Source\Common\Common.csproj">
+      <Project>{8073ccc5-b114-4abe-8711-f34a56d65665}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Source\OFDRExtractor\OFDRExtractor.csproj">
+      <Project>{1c75da1a-26ac-4156-b794-7d8c41f5ded5}</Project>
+      <Name>OFDRExtractor</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

@@ -5,18 +5,18 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{E62EA639-7FD8-4655-917C-B31500A0674E}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <ProjectGuid>{1C75DA1A-26AC-4156-B794-7D8C41F5DED5}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OFDRExtractor.GUI</RootNamespace>
-    <AssemblyName>OFDRUnpacker</AssemblyName>
+    <RootNamespace>OFDRExtractor</RootNamespace>
+    <AssemblyName>OFDRExtractor</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -34,40 +34,49 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
+    <Reference Include="Accessibility">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IProgressReporter.cs" />
-    <Compile Include="OFDRUnpacker.cs" />
-    <Compile Include="ShellViewModel.cs" />
-    <Compile Include="MainForm.xaml.cs">
-      <DependentUpon>MainForm.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Program.cs" />
+    <Compile Include="Business\Extractor\ExtractorInvoker.cs" />
+    <Compile Include="Business\Comparer\FolderTreeCompareLevel.cs" />
+    <Compile Include="Business\Comparer\FolderTreeComparer.cs" />
+    <Compile Include="Business\Extractor\NFSFileExtractor.cs" />
+    <Compile Include="Business\Comparer\NFSLineComparer.cs" />
+    <Compile Include="Business\NFSTreeBuilder.cs" />
+    <Compile Include="Business\Branches\PreparedFolderBranchesManager.cs" />
+    <Compile Include="Business\Comparer\PreparedFolderBranchNodeComparer.cs" />
+    <Compile Include="Business\Branches\PreparedFolderBranchRefMap.cs" />
+    <Compile Include="TODO.cs" />
+    <Compile Include="Business\Extractor\Win000NFSReader.cs" />
+    <Compile Include="Model\IName.cs" />
+    <Compile Include="Model\NFS\NFSFile.cs" />
+    <Compile Include="Model\NFS\NFSFolder.cs" />
+    <Compile Include="Model\NFS\NFSLine.cs" />
+    <Compile Include="Business\FolderSerializer.cs" />
+    <Compile Include="Model\Prepared\PreparedFile.cs" />
+    <Compile Include="Model\Prepared\PreparedFolder.cs" />
+    <Compile Include="Model\Prepared\PreparedFolderBranch.cs" />
+    <Compile Include="Model\Prepared\PreparedFolderBranchNode.cs" />
+    <Compile Include="Model\XmlSerializable.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="MainForm.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Source\OFDRExtractor.csproj">
-      <Project>{1C75DA1A-26AC-4156-B794-7D8C41F5DED5}</Project>
-      <Name>OFDRExtractor</Name>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{8073ccc5-b114-4abe-8711-f34a56d65665}</Project>
+      <Name>Common</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

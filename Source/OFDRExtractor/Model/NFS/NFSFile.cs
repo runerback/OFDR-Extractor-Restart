@@ -10,6 +10,9 @@ namespace OFDRExtractor.Model
 		public NFSFile(string filename, string extension, NFSFolder folder, int index, int order, string name, long size)
 			: base(index, order, name, size)
 		{
+			if (folder == null)
+				throw new ArgumentNullException("folder");
+			
 			this.filename = filename;
 			this.extension = extension;
 			this.folder = folder;
