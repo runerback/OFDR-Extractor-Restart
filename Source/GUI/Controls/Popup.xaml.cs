@@ -9,23 +9,15 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace OFDRExtractor.GUI
+namespace OFDRExtractor.GUI.Controls
 {
-	partial class MainForm : Window
+	partial class Popup : Window
 	{
-		public MainForm()
+		public Popup()
 		{
 			InitializeComponent();
-
-			this.DataContext = ShellViewModel.Instance;
-			Dispatcher.BeginInvoke((Action)delegate
-			{
-				OFDRUnpacker.Unpack(ShellViewModel.Instance);
-			},
-			System.Windows.Threading.DispatcherPriority.Loaded);
 		}
 	}
 }

@@ -15,7 +15,7 @@ namespace OFDRExtractor.UnitTest
 		private readonly string branchData = @"branches.txt";
 
 		private NFSRootTest nfs = new NFSRootTest();
-		private PreparedFolderBranchesManager branchesManager;
+		private NFSFolderBranchesManager branchesManager;
 
 		[TestInitialize]
 		public void InitializeTwoRootTest()
@@ -24,7 +24,7 @@ namespace OFDRExtractor.UnitTest
 			Assert.IsTrue(File.Exists(branchData), "branches data missing");
 			var lines = File.ReadAllLines(branchData);
 			Assert.IsTrue(lines != null && lines.Length > 0, "empty branches");
-			this.branchesManager = new PreparedFolderBranchesManager(
+			this.branchesManager = new NFSFolderBranchesManager(
 				lines,
 				new ProgressReporterInConsole());
 		}

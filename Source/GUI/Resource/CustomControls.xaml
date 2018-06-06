@@ -1,0 +1,67 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:OFDRExtractor.GUI.Controls">
+
+    <!--#region custom control style-->
+
+    <Style TargetType="controls:ProgressReporter">
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Margin" Value="3" />
+        <Setter Property="Padding" Value="3" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource MainDeepBrush}" />
+        <Setter Property="FontStyle" Value="Italic" />
+        <Setter Property="ProgressBarBrush" Value="#33123456" />
+        <Setter Property="Template" Value="{DynamicResource ProgressReporterTemplate}" />
+    </Style>
+
+    <Style TargetType="controls:BusyLayer">
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Margin" Value="3" />
+        <Setter Property="Padding" Value="3" />
+        <Setter Property="Background" Value="#33123456" />
+    </Style>
+
+    <!--#endregion custom control style-->
+
+    <!--#region custom control template-->
+
+    <ControlTemplate TargetType="controls:ProgressReporter" x:Key="ProgressReporterTemplate">
+        <ControlTemplate.Resources>
+            <Style TargetType="Border" BasedOn="{StaticResource CenterBorderStyle}">
+                <Setter Property="Padding" Value="0" />
+            </Style>
+            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}" />
+            <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                <Setter Property="HorizontalAlignment" Value="Center" />
+            </Style>
+        </ControlTemplate.Resources>
+
+        <Border Margin="{TemplateBinding Margin}" HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalAlignment}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
+            <Grid>
+                <Rectangle 
+                    Fill="{TemplateBinding ProgressBarBrush}" 
+                    HorizontalAlignment="Left" 
+                    VerticalAlignment="Stretch" 
+                    Width="{TemplateBinding ProgressBarWidth}" 
+                    Margin="{TemplateBinding Padding}" />
+                <TextBlock 
+                    Padding="3 0 0 0"
+                    Text="{TemplateBinding Status}" 
+                    Margin="{TemplateBinding Padding}" 
+                    Foreground="{TemplateBinding Foreground}" 
+                    FontStyle="{TemplateBinding FontStyle}" 
+                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" />
+            </Grid>
+        </Border>
+    </ControlTemplate>
+
+    <!--#endregion custom control template-->
+
+</ResourceDictionary>

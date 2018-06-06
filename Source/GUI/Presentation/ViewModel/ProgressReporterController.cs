@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.ComponentModel;
 
 namespace OFDRExtractor.GUI
 {
-	sealed class ShellViewModel : INotifyPropertyChanged, IProgressReporter
+	sealed class ProgressReporterController : ViewModelBase, IProgressReporter
 	{
-		private ShellViewModel() { }
-
-		public static readonly ShellViewModel Instance = new ShellViewModel();
+		private ProgressReporterController() { }
 		
-		#region Properties
+		private static readonly ProgressReporterController instance = new ProgressReporterController();
+		public static ProgressReporterController Instance
+		{
+			get { return instance; }
+		}
 
 		private double progress = 0;
 		public double Progress
@@ -42,20 +43,6 @@ namespace OFDRExtractor.GUI
 			}
 		}
 
-		#endregion Properties
-
-		#region INotifyPropertyChanged
-
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		private void NotifyPropertyChanged(string propertyName)
-		{
-			if (PropertyChanged != null)
-				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-		}
-
-		#endregion INotifyPropertyChanged
-
 		#region IProgressReporter
 
 		void IProgressReporter.Report(string status)
@@ -65,12 +52,12 @@ namespace OFDRExtractor.GUI
 
 		void IProgressReporter.Report(double percent)
 		{
-			this.Progress = percent * 1000;
+			this.Progress = percent;
 		}
 
 		void IProgressReporter.Report(double percent, string status)
 		{
-			this.Progress = percent * 1000;
+			this.Progress = percent;
 			this.Status = status;
 		}
 
@@ -86,6 +73,5 @@ namespace OFDRExtractor.GUI
 
 		#endregion IProgressReporter
 
-		
 	}
 }

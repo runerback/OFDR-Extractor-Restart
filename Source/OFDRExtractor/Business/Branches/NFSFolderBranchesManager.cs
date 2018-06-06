@@ -9,34 +9,34 @@ namespace OFDRExtractor.Business
 	/// <summary>
 	/// all branches start from layer 1 (direct sub folder of data_win)
 	/// </summary>
-	public sealed class PreparedFolderBranchesManager
+	public sealed class NFSFolderBranchesManager
 	{
 		#region obsolated
 
 		#endregion obsolated
 
-		public PreparedFolderBranchesManager(IEnumerable<string> branches, IProgressReporter reporter)
+		public NFSFolderBranchesManager(IEnumerable<string> branches, IProgressReporter reporter)
 		{
 			this.branches = validate(BuildBranches(branches), reporter);
 		}
 
-		private readonly IEnumerable<PreparedFolderBranch> branches;
-		public IEnumerable<PreparedFolderBranch> Branches
+		private readonly IEnumerable<NFSFolderBranch> branches;
+		public IEnumerable<NFSFolderBranch> Branches
 		{
 			get { return this.branches; }
 		}
 
-		private IEnumerable<PreparedFolderBranch> BuildBranches(IEnumerable<string> branches)
+		private IEnumerable<NFSFolderBranch> BuildBranches(IEnumerable<string> branches)
 		{
 			if (branches == null || !branches.Any())
 				yield break;
 			foreach (var branch in branches)
-				yield return new PreparedFolderBranch(branch);
+				yield return new NFSFolderBranch(branch);
 		}
 
 		//validate same node in differenct branch, one branch is contained in another branch compare from start
 		//such as `a/b/c` and `a/b', not 'a/b/c/d` and 'a/b/c/e', not 'b/c' and 'a/b/c'
-		private PreparedFolderBranch[] validate(IEnumerable<PreparedFolderBranch> branches, IProgressReporter reporter)
+		private NFSFolderBranch[] validate(IEnumerable<NFSFolderBranch> branches, IProgressReporter reporter)
 		{
 			bool report = reporter != null;
 
@@ -93,9 +93,9 @@ namespace OFDRExtractor.Business
 			return items;
 		}
 
-		internal PreparedFolderBranchRefMap CreateRefMap()
+		internal NFSFolderBranchRefMap CreateRefMap()
 		{
-			return new PreparedFolderBranchRefMap(this.branches);
+			return new NFSFolderBranchRefMap(this.branches);
 		}
 	}
 }

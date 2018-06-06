@@ -6,9 +6,9 @@ using System.Text;
 
 namespace OFDRExtractor.Business
 {
-	sealed class PreparedFolderBranchRefMap
+	sealed class NFSFolderBranchRefMap
 	{
-		public PreparedFolderBranchRefMap(IEnumerable<PreparedFolderBranch> branches)
+		public NFSFolderBranchRefMap(IEnumerable<NFSFolderBranch> branches)
 		{
 			if (branches == null || !branches.Any())
 				throw new ArgumentNullException("branches");
@@ -23,7 +23,7 @@ namespace OFDRExtractor.Business
 					comparer);
 		}
 
-		private readonly Dictionary<PreparedFolderBranchNode, int> refCountMap;
+		private readonly Dictionary<NFSFolderBranchNode, int> refCountMap;
 		private readonly object mapLock = new object();
 
 		public int Count
@@ -37,7 +37,7 @@ namespace OFDRExtractor.Business
 			}
 		}
 
-		public bool HasReference(PreparedFolderBranchNode node)
+		public bool HasReference(NFSFolderBranchNode node)
 		{
 			if (node == null)
 				throw new ArgumentNullException("node");
@@ -46,7 +46,7 @@ namespace OFDRExtractor.Business
 				return this.refCountMap.ContainsKey(node);
 		}
 
-		public int DecreaseReferenceCount(PreparedFolderBranchNode node)
+		public int DecreaseReferenceCount(NFSFolderBranchNode node)
 		{
 			if (node == null)
 				throw new ArgumentNullException("node");

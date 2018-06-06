@@ -54,9 +54,9 @@
     <Compile Include="Business\Extractor\NFSFileExtractor.cs" />
     <Compile Include="Business\Comparer\NFSLineComparer.cs" />
     <Compile Include="Business\NFSTreeBuilder.cs" />
-    <Compile Include="Business\Branches\PreparedFolderBranchesManager.cs" />
+    <Compile Include="Business\Branches\NFSFolderBranchesManager.cs" />
     <Compile Include="Business\Comparer\PreparedFolderBranchNodeComparer.cs" />
-    <Compile Include="Business\Branches\PreparedFolderBranchRefMap.cs" />
+    <Compile Include="Business\Branches\NFSFolderBranchRefMap.cs" />
     <Compile Include="TODO.cs" />
     <Compile Include="Business\Extractor\Win000NFSReader.cs" />
     <Compile Include="Model\IName.cs" />
@@ -66,8 +66,8 @@
     <Compile Include="Business\FolderSerializer.cs" />
     <Compile Include="Model\Prepared\PreparedFile.cs" />
     <Compile Include="Model\Prepared\PreparedFolder.cs" />
-    <Compile Include="Model\Prepared\PreparedFolderBranch.cs" />
-    <Compile Include="Model\Prepared\PreparedFolderBranchNode.cs" />
+    <Compile Include="Model\NFS\NFSFolderBranch.cs" />
+    <Compile Include="Model\NFS\NFSFolderBranchNode.cs" />
     <Compile Include="Model\XmlSerializable.cs" />
   </ItemGroup>
   <ItemGroup>

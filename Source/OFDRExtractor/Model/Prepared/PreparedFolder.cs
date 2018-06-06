@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 
 namespace OFDRExtractor.Model
 {
+	[Obsolete]
 	[XmlRoot("folder")]
 	public sealed class PreparedFolder : IName
 	{

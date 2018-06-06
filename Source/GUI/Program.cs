@@ -9,16 +9,9 @@ namespace OFDRExtractor.GUI
 		[STAThread]
 		static void Main()
 		{
-			Application app = new Application();
-			app.DispatcherUnhandledException += onDispatcherUnhandledException;
-			app.Run(new MainForm());
-		}
-
-		static void onDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
-		{
-			var exception = e.Exception;
-			MessageBox.Show(exception.ToString(), exception.Message);
-			e.Handled = true;
+			var app = new App();
+			app.InitializeComponent();
+			app.Run();
 		}
 	}
 }

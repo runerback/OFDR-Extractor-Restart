@@ -5,9 +5,9 @@ using System.Text;
 
 namespace OFDRExtractor.Model
 {
-	public sealed class PreparedFolderBranch
+	public sealed class NFSFolderBranch
 	{
-		public PreparedFolderBranch(IEnumerable<string> orderedNodes)
+		public NFSFolderBranch(IEnumerable<string> orderedNodes)
 		{
 			if (orderedNodes == null || !orderedNodes.Any())
 				throw new ArgumentNullException("orderedNodes");
@@ -16,11 +16,11 @@ namespace OFDRExtractor.Model
 
 			this.fullPath = string.Join(NODE_SPLITER.ToString(), nodes);
 			this.nodes = nodes
-				.Select((name, index) => new PreparedFolderBranchNode(nodes.Take(index + 1), name))
+				.Select((name, index) => new NFSFolderBranchNode(nodes.Take(index + 1), name))
 				.ToArray();
 		}
 
-		public PreparedFolderBranch(string branch)
+		public NFSFolderBranch(string branch)
 		{
 			if (string.IsNullOrWhiteSpace(branch))
 				throw new ArgumentNullException("branch");
@@ -31,7 +31,7 @@ namespace OFDRExtractor.Model
 			this.fullPath = branch;
 
 			var branchNodes = nodes
-				.Select((name, index) => new PreparedFolderBranchNode(nodes.Take(index + 1), name))
+				.Select((name, index) => new NFSFolderBranchNode(nodes.Take(index + 1), name))
 				.ToArray();
 			this.nodes = branchNodes;
 			this.nodeCount = branchNodes.Length;
@@ -43,8 +43,8 @@ namespace OFDRExtractor.Model
 			get { return this.fullPath; }
 		}
 
-		private IEnumerable<PreparedFolderBranchNode> nodes;
-		public IEnumerable<PreparedFolderBranchNode> Nodes
+		private IEnumerable<NFSFolderBranchNode> nodes;
+		public IEnumerable<NFSFolderBranchNode> Nodes
 		{
 			get { return this.nodes; }
 		}
@@ -79,7 +79,7 @@ namespace OFDRExtractor.Model
 				if (!sourceIterator.MoveNext())
 					return true; //exactly same
 
-				if (sourceIterator.Current == PreparedFolderBranch.NODE_SPLITER)
+				if (sourceIterator.Current == NFSFolderBranch.NODE_SPLITER)
 					return true; //starts with
 			}
 			return false; //not end with NODE_SPLITER means not start with Nodes

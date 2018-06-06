@@ -6,6 +6,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{E62EA639-7FD8-4655-917C-B31500A0674E}</ProjectGuid>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>OFDRExtractor.GUI</RootNamespace>
@@ -39,6 +40,10 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Microsoft.CSharp" />
@@ -47,20 +52,62 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="OFDRUnpacker.cs" />
-    <Compile Include="ShellViewModel.cs" />
-    <Compile Include="MainForm.xaml.cs">
-      <DependentUpon>MainForm.xaml</DependentUpon>
+    <Compile Include="Business\AppExitingHandler.cs" />
+    <Compile Include="Business\ExceptionWrapper.cs" />
+    <Compile Include="Business\IPopupController.cs" />
+    <Compile Include="Business\Popup.cs" />
+    <Compile Include="Business\Unpack\NFSRootLoader.cs" />
+    <Compile Include="Business\Unpack\Unpacker.cs" />
+    <Compile Include="Controls\BusyLayer.cs" />
+    <Compile Include="Controls\Popup.xaml.cs">
+      <DependentUpon>Popup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ProgressReporter.cs" />
+    <Compile Include="Model\FileData.cs" />
+    <Compile Include="Model\FolderData.cs" />
+    <Compile Include="Mvvm\Behaviors\CloseWindowBehavior.cs" />
+    <Compile Include="Mvvm\Behaviors\DragMoveBehavior.cs" />
+    <Compile Include="Mvvm\Converters\VisibilityConverter.cs" />
+    <Compile Include="Mvvm\SimpleCommand.cs" />
+    <Compile Include="Mvvm\ViewModelBase.cs" />
+    <Compile Include="Business\Unpack\OFDRUnpacker.cs" />
+    <Compile Include="Presentation\App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\ViewModel\BusyLayerController.cs" />
+    <Compile Include="Presentation\ViewModel\ProgressReporterController.cs" />
+    <Compile Include="Presentation\ViewModel\ShellViewModel.cs" />
+    <Compile Include="Presentation\View\ShellView.xaml.cs">
+      <DependentUpon>ShellView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Business\" />
-    <Folder Include="Mvvm\" />
+    <Folder Include="lib\" />
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="MainForm.xaml">
+    <Page Include="Controls\Popup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\App.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\View\ShellView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resource\BasicTheme.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resource\Converters.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resource\CustomControls.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 
 namespace OFDRExtractor.Model
 {
+	[Obsolete]
 	public sealed class PreparedFile : IName
 	{
 		public PreparedFile()

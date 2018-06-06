@@ -8,7 +8,7 @@ namespace OFDRExtractor.Business
 {
 	public sealed class NFSTreeBuilder
 	{
-		public NFSTreeBuilder(NFSFolder nfsRoot, PreparedFolderBranchesManager branchesManager)
+		public NFSTreeBuilder(NFSFolder nfsRoot, NFSFolderBranchesManager branchesManager)
 		{
 			if (nfsRoot == null)
 				throw new ArgumentNullException("nfsRoot");
@@ -20,7 +20,7 @@ namespace OFDRExtractor.Business
 		}
 
 		private readonly NFSFolder nfsRoot;
-		private readonly PreparedFolderBranchesManager branchesManager;
+		private readonly NFSFolderBranchesManager branchesManager;
 		private readonly object buildLock = new object();
 
 		private NFSFolder GetRoot()
@@ -95,7 +95,7 @@ namespace OFDRExtractor.Business
 
 		class NFSFolderNodePair
 		{
-			public NFSFolderNodePair(NFSFolder folder, PreparedFolderBranchNode node)
+			public NFSFolderNodePair(NFSFolder folder, NFSFolderBranchNode node)
 			{
 				if (folder == null)
 					throw new ArgumentNullException("folder");
@@ -114,8 +114,8 @@ namespace OFDRExtractor.Business
 				get { return this.folder; }
 			}
 
-			private readonly PreparedFolderBranchNode node;
-			public PreparedFolderBranchNode Node
+			private readonly NFSFolderBranchNode node;
+			public NFSFolderBranchNode Node
 			{
 				get { return this.node; }
 			}

@@ -5,9 +5,9 @@ using System.Text;
 
 namespace OFDRExtractor.Model
 {
-	public sealed class PreparedFolderBranchNode
+	public sealed class NFSFolderBranchNode
 	{
-		public PreparedFolderBranchNode(IEnumerable<string> nodes, string name)
+		public NFSFolderBranchNode(IEnumerable<string> nodes, string name)
 		{
 			if (nodes == null || !nodes.Any())
 				throw new ArgumentNullException("nodes");
