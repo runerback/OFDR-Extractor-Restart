@@ -100,7 +100,7 @@ namespace OFDRExtractor.GUI.Business
 			}
 		}
 
-		private readonly List<Model.FileData> selectedFiles = new List<Model.FileData>();
+		private readonly HashSet<Model.FileData> selectedFiles = new HashSet<Model.FileData>();
 		public IEnumerable<Model.FileData> SelectedFiles
 		{
 			get { return this.selectedFiles; }

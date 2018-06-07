@@ -33,7 +33,7 @@ namespace OFDRExtractor.UnitTest
 		public void BuildNFSRoot()
 		{
 			var builder = new NFSTreeBuilder(this.nfs.Root, this.branchesManager);
-			var nfsFolderRoot = builder.Build();
+			var nfsFolderRoot = builder.Build(new ProgressReporterInConsole());
 
 			//silly way to get PreparedFolderRoot
 			new GenerateFoldersFromBranches().GenerateDataWinFolderTree();
@@ -57,7 +57,7 @@ namespace OFDRExtractor.UnitTest
 			Assert.AreEqual(count, travelFolder(nfsRoot), "flatten");
 
 			var builder = new NFSTreeBuilder(this.nfs.Root, this.branchesManager);
-			var builtNFSRoot = builder.Build();
+			var builtNFSRoot = builder.Build(new ProgressReporterInConsole());
 
 			Assert.AreEqual(count, travelFolder(builtNFSRoot), "built");
 		}

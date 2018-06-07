@@ -17,14 +17,17 @@ namespace OFDRExtractor.GUI.Model
 			this.source = folder;
 
 			this.name = folder.Name;
+			this.description = folder.ToString();
+
 			this.files = folder.Files
 				.Select(item => new FileData(item))
 				.ToArray();
 			this.subFolders = folder.Folders
 				.Select(item => new FolderData(item))
 				.ToArray();
-
+			
 			this.selecableManager = new Business.SelectableManager(this);
+			this.selecableManager.SelectionChanged += onSelectionChanged;
 		}
 
 		private readonly NFSFolder source;
@@ -37,6 +40,12 @@ namespace OFDRExtractor.GUI.Model
 		public string Name
 		{
 			get { return this.name; }
+		}
+
+		private string description;
+		public string Description
+		{
+			get { return this.description; }
 		}
 
 		private readonly FolderData[] subFolders;
@@ -70,6 +79,19 @@ namespace OFDRExtractor.GUI.Model
 				file.IsSelected = isSelected;
 				file.ShouldRaiseEvent = true;
 			}
+		}
+
+		private void onSelectionChanged(object sender, EventArgs e)
+		{
+			this.ShouldRaiseEvent = false;
+
+			var manager = this.selecableManager;
+			if (manager.IsAllSelected)
+				this.IsSelected = true;
+			else if (!manager.IsAnySelected)
+				this.IsSelected = false;
+
+			this.ShouldRaiseEvent = true;
 		}
 	}
 }

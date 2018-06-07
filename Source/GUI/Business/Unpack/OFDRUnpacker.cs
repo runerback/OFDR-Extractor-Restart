@@ -17,7 +17,7 @@ namespace OFDRExtractor.GUI
 			var loader = new Business.Unpack.NFSRootLoader(reporter);
 			return startOperation<Model.FolderData>(
 				reporter,
-				loader.LoadNFSRoot,
+				loader.BuildNFSRoot,
 				loader);
 		}
 
@@ -70,7 +70,7 @@ namespace OFDRExtractor.GUI
 			{
 				if (report)
 					reporter.Report((double)i / 10, string.Format("Tesing. . . {0} remind", 10 - i));
-				System.Threading.Thread.Sleep(1000);
+				System.Threading.Thread.Sleep(100);
 			}
 
 			if (report)

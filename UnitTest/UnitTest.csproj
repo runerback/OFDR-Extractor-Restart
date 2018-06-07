@@ -52,6 +52,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="FileSizeFormatTest.cs" />
     <Compile Include="GenerateFoldersFromBranches.cs" />
     <Compile Include="NFSRootTest.cs" />
     <Compile Include="PreparedRootTest.cs" />

@@ -28,6 +28,35 @@
         <Setter Property="Background" Value="#33123456" />
     </Style>
 
+    <Style TargetType="controls:HeaderBar">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Template" Value="{DynamicResource HeaderBarTemplate}" />
+    </Style>
+    
+    <Style TargetType="controls:FolderDataPresenter">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Margin" Value="1" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Template" Value="{DynamicResource FolderDataPresenterTemplate}" />
+    </Style>
+    
+    <Style TargetType="controls:FileDataPresenter">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Margin" Value="1" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Template" Value="{DynamicResource FileDataPresenterTemplate}" />
+    </Style>
+
     <!--#endregion custom control style-->
 
     <!--#region custom control template-->
@@ -58,6 +87,88 @@
                     Foreground="{TemplateBinding Foreground}" 
                     FontStyle="{TemplateBinding FontStyle}" 
                     HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" />
+            </Grid>
+        </Border>
+    </ControlTemplate>
+
+    <ControlTemplate TargetType="controls:HeaderBar" x:Key="HeaderBarTemplate">
+        <ControlTemplate.Resources>
+            <LinearGradientBrush x:Key="BackgroundBrush" StartPoint="0 0" EndPoint="0 1">
+                <GradientStop Color="White" Offset="0" />
+                <GradientStop Color="WhiteSmoke" Offset="0.618" />
+                <GradientStop Color="LightGray" Offset="1" />
+            </LinearGradientBrush>
+        </ControlTemplate.Resources>
+
+        <Border 
+            HorizontalAlignment="{TemplateBinding HorizontalAlignment}" 
+            VerticalAlignment="{TemplateBinding VerticalAlignment}" 
+            Background="{StaticResource BackgroundBrush}"
+            Margin="0 3"
+            Style="{StaticResource CenterBorderStyle}">
+            <ContentPresenter />
+        </Border>
+    </ControlTemplate>
+
+    <ControlTemplate TargetType="controls:FolderDataPresenter" x:Key="FolderDataPresenterTemplate">
+        <Border 
+            Margin="{TemplateBinding Margin}" 
+            Padding="{TemplateBinding Padding}"
+            HorizontalAlignment="{TemplateBinding HorizontalAlignment}" 
+            VerticalAlignment="{TemplateBinding VerticalAlignment}" 
+            BorderBrush="{TemplateBinding BorderBrush}" 
+            BorderThickness="{TemplateBinding BorderThickness}" 
+            Background="{TemplateBinding Background}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                
+                <CheckBox 
+                    IsChecked="{Binding Data.IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource TemplatedParent}}" />
+                <controls:HeaderBar 
+                    Grid.Column="1" 
+                    ToolTip="{Binding Data.Description, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}">
+                    <TextBlock 
+                        Text="{Binding Data.Name, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" 
+                        Style="{StaticResource H6}" />
+                </controls:HeaderBar>
+            </Grid>
+        </Border>
+    </ControlTemplate>
+    
+    <ControlTemplate TargetType="controls:FileDataPresenter" x:Key="FileDataPresenterTemplate">
+        <Border 
+            Margin="{TemplateBinding Margin}" 
+            Padding="{TemplateBinding Padding}"
+            HorizontalAlignment="{TemplateBinding HorizontalAlignment}" 
+            VerticalAlignment="{TemplateBinding VerticalAlignment}" 
+            BorderBrush="{TemplateBinding BorderBrush}" 
+            BorderThickness="{TemplateBinding BorderThickness}" 
+            Background="{TemplateBinding Background}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <CheckBox 
+                    IsChecked="{Binding Data.IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource TemplatedParent}}" />
+                
+                <Grid Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock
+                        Text="{Binding Data.Name, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"
+                        Style="{StaticResource H7}" />
+                    <TextBlock
+                        Grid.Column="1"
+                        Text="{Binding Data.Size, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" />
+                </Grid>
             </Grid>
         </Border>
     </ControlTemplate>

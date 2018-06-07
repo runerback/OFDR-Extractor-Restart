@@ -26,13 +26,16 @@ namespace OFDRExtractor.Business
 		private readonly Dictionary<NFSFolderBranchNode, int> refCountMap;
 		private readonly object mapLock = new object();
 
-		public int Count
+		/// <summary>
+		/// nodes count
+		/// </summary>
+		public int NodesCount
 		{
 			get
 			{
 				lock (mapLock)
 				{
-					return this.refCountMap.Count;
+					return this.refCountMap.Values.Sum();
 				}
 			}
 		}

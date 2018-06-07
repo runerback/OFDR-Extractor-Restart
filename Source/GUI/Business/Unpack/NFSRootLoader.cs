@@ -13,9 +13,6 @@ namespace OFDRExtractor.GUI.Business.Unpack
 	{
 		public NFSRootLoader(IProgressReporter reporter)
 		{
-			if (!File.Exists(branchesFile))
-				throw new FileNotFoundException("branches.txt");
-
 			this.report = reporter != null;
 			this.reporter = reporter;
 
@@ -28,16 +25,18 @@ namespace OFDRExtractor.GUI.Business.Unpack
 		private readonly IProgressReporter reporter;
 		private static readonly object loadingLock = new object();
 
-		public Model.FolderData LoadNFSRoot()
+		public Model.FolderData BuildNFSRoot()
 		{
 			lock (loadingLock)
 			{
 				var report = this.report;
 				var reporter = this.reporter;
 
-				var nfsFolders = this.LoadNFSFolders();
+				var nfsFolderRoot = this.LoadNFSFolderRoot();
 				var branchesManager = this.LoadBranches();
-				var root = this.BuildNFSRoot(nfsFolders, branchesManager);
+
+				var builder = new NFSTreeBuilder(nfsFolderRoot, branchesManager);
+				var root = builder.Build(reporter);
 
 				return new Model.FolderData(root);
 			}
@@ -45,33 +44,25 @@ namespace OFDRExtractor.GUI.Business.Unpack
 
 		#region operations
 
-		private NFSFolder[] LoadNFSFolders()
+		private NFSFolder LoadNFSFolderRoot()
 		{
-			var report = this.report;
 			var reporter = this.reporter;
 
-			throw new NotImplementedException();
+			string linesFile = "lines.txt";
+			if (!File.Exists(linesFile))
+				throw new FileNotFoundException(linesFile);
+			var lines = File.ReadAllLines(linesFile);
+			return NFSFolder.Load(lines, reporter).Result;
 		}
 
 		private NFSFolderBranchesManager LoadBranches()
 		{
-			var report = this.report;
 			var reporter = this.reporter;
 
-			throw new NotImplementedException();
-		}
-
-		private NFSFolder BuildNFSRoot(IEnumerable<NFSFolder> nfsFolders, NFSFolderBranchesManager branchesManager)
-		{
-			if (nfsFolders == null)
-				throw new ArgumentNullException("nfsFolders");
-			if (branchesManager == null)
-				throw new ArgumentNullException("branchesManager");
-
-			var report = this.report;
-			var reporter = this.reporter;
-
-			throw new NotImplementedException();
+			if (!File.Exists(branchesFile))
+				throw new FileNotFoundException("branches.txt");
+			var branches = File.ReadAllLines(branchesFile);
+			return new NFSFolderBranchesManager(branches, reporter);
 		}
 
 		#endregion operations

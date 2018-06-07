@@ -18,7 +18,7 @@ namespace OFDRExtractor.GUI.Model
 			this.name = file.Name;
 			this.filename = file.Filename;
 			this.extension = file.Extension;
-			this.size = file.Size + " bytes";
+			this.size = formatSize(file.Size);
 		}
 
 		private readonly NFSFile source;
@@ -50,5 +50,27 @@ namespace OFDRExtractor.GUI.Model
 		{
 			get { return this.size; }
 		}
+
+		#region format file size
+
+		private static readonly string[] file_size_units = new string[] { "Bytes", "KB", "MB", "GB" };
+
+		private static string formatSize(long size)
+		{
+			var units = file_size_units;
+
+			if (size <= 0)
+				return 0 + units[0];
+
+			int pow = (int)Math.Floor(Math.Log(size) / Math.Log(1024));
+			if (pow >= units.Length)
+				pow = units.Length - 1;
+
+			double value = (double)size / Math.Pow(1024, pow);
+			return Math.Round(value, 1) + units[pow];
+		}
+
+		#endregion format file size
+
 	}
 }

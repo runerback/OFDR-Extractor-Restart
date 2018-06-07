@@ -69,6 +69,9 @@
     <Compile Include="Business\Unpack\NFSRootLoader.cs" />
     <Compile Include="Business\Unpack\Unpacker.cs" />
     <Compile Include="Controls\BusyLayer.cs" />
+    <Compile Include="Controls\FileDataPresenter.cs" />
+    <Compile Include="Controls\FolderDataPresenter.cs" />
+    <Compile Include="Controls\HeaderBar.cs" />
     <Compile Include="Controls\Popup.xaml.cs">
       <DependentUpon>Popup.xaml</DependentUpon>
     </Compile>
