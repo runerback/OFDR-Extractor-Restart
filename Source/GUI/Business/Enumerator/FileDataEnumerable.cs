@@ -5,9 +5,9 @@ using System.Text;
 
 namespace OFDRExtractor.GUI.Business
 {
-	sealed class FileDataEnumerate : IEnumerable<Model.FileData>
+	class FileDataEnumerable : IEnumerable<Model.FileData>
 	{
-		public FileDataEnumerate(Model.FolderData source)
+		public FileDataEnumerable(Model.FolderData source)
 		{
 			if (source == null)
 				throw new ArgumentNullException("source");
@@ -18,19 +18,14 @@ namespace OFDRExtractor.GUI.Business
 
 		public IEnumerator<Model.FileData> GetEnumerator()
 		{
-			var source = this.source;
-
-			foreach (var file in source.Files)
-				yield return file;
-
-			var folderIteratorStack = new Stack<IEnumerator<Model.FolderData>>();
-			folderIteratorStack.Push(source.SubFolders.GetEnumerator());
-			throw new NotImplementedException();
+			return new FolderDataEnumerable(this.source)
+				.SelectMany(item => item.Files)
+				.GetEnumerator();
 		}
 
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
-			return this.GetEnumerator();
+			return GetEnumerator();
 		}
 	}
 }

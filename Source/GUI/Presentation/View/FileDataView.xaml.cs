@@ -12,11 +12,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace OFDRExtractor.GUI
+namespace OFDRExtractor.GUI.Presentation.View
 {
-	partial class ShellView : Window
+	/// <summary>
+	/// Interaction logic for FileDataView.xaml
+	/// </summary>
+	public partial class FileDataView : UserControl
 	{
-		public ShellView()
+		public FileDataView()
 		{
 			InitializeComponent();
 		}

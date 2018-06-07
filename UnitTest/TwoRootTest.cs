@@ -47,5 +47,47 @@ namespace OFDRExtractor.UnitTest
 				FolderTreeCompareLevel.Folder);
 			Assert.IsTrue(areEquals, "two root are not same");
 		}
+
+		[TestMethod]
+		public void TravelTest()
+		{
+			var nfsRoot = this.nfs.Root;
+			int count = nfsRoot.Folders.Count() + 1;
+
+			Assert.AreEqual(count, travelFolder(nfsRoot), "flatten");
+
+			var builder = new NFSTreeBuilder(this.nfs.Root, this.branchesManager);
+			var builtNFSRoot = builder.Build();
+
+			Assert.AreEqual(count, travelFolder(builtNFSRoot), "built");
+		}
+
+		private int travelFolder(NFSFolder source)
+		{
+			int count = 0;
+
+			count++;
+
+			var iteratorStack = new Stack<IEnumerator<NFSFolder>>();
+			iteratorStack.Push(source.Folders.GetEnumerator());
+
+			while (iteratorStack.Count > 0)
+			{
+				var iterator = iteratorStack.Peek();
+				if (!iterator.MoveNext())
+				{
+					iteratorStack.Pop();
+				}
+				else
+				{
+					var current = iterator.Current;
+					iteratorStack.Push(current.Folders.GetEnumerator());
+
+					count++;
+				}
+			}
+
+			return count;
+		}
 	}
 }

@@ -17,10 +17,14 @@ namespace OFDRExtractor.GUI.Model
 			this.source = folder;
 
 			this.name = folder.Name;
-			this.files = new ObservableCollection<FileData>(
-				folder.Files.Select(item => new FileData(item)));
-			this.subFolders = new ObservableCollection<FolderData>(
-				folder.Folders.Select(item => new FolderData(item)));
+			this.files = folder.Files
+				.Select(item => new FileData(item))
+				.ToArray();
+			this.subFolders = folder.Folders
+				.Select(item => new FolderData(item))
+				.ToArray();
+
+			this.selecableManager = new Business.SelectableManager(this);
 		}
 
 		private readonly NFSFolder source;
@@ -35,15 +39,37 @@ namespace OFDRExtractor.GUI.Model
 			get { return this.name; }
 		}
 
-		private readonly AutoInvokeObservableCollection<FolderData> subFolders;
+		private readonly FolderData[] subFolders;
 		public IEnumerable<FolderData> SubFolders
 		{
 			get { return this.subFolders; }
 		}
-		private readonly AutoInvokeObservableCollection<FileData> files;
+		private readonly FileData[] files;
 		public IEnumerable<FileData> Files
 		{
 			get { return this.files; }
-		}		
+		}
+
+		public IEnumerable<Business.ISelectable> Selectables
+		{
+			get { return this.files.Concat<Business.ISelectable>(this.subFolders); }
+		}
+
+		private readonly ISelectableManager selecableManager;
+		public ISelectableManager SelectableManager
+		{
+			get { return this.selecableManager; }
+		}
+
+		protected override void onIsSelectedChanged()
+		{
+			bool isSelected = this.IsSelected;
+			foreach (var file in this.files)
+			{
+				file.ShouldRaiseEvent = false;
+				file.IsSelected = isSelected;
+				file.ShouldRaiseEvent = true;
+			}
+		}
 	}
 }

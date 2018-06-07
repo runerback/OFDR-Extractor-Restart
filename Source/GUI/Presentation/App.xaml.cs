@@ -25,7 +25,12 @@ namespace OFDRExtractor.GUI
 
 		protected override void OnStartup(StartupEventArgs e)
 		{
-			new ShellView().Show();
+			var shell = new ShellView();
+			shell.ContentRendered += delegate
+			{
+				shell.DataContext = ShellViewModel.Instance;
+			};
+			shell.Show();
 		}
 
 		void onDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

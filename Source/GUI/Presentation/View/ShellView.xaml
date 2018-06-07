@@ -7,13 +7,13 @@
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:behaviors="clr-namespace:OFDRExtractor.GUI.Mvvm.Behaviors"
     xmlns:local="clr-namespace:OFDRExtractor.GUI"
+    xmlns:views="clr-namespace:OFDRExtractor.GUI.Presentation.View"
     Height="475" 
     Width="800"
     WindowStartupLocation="CenterScreen"
     Style="{StaticResource NoBorderWindowStyle}">
     <Grid Margin="3">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition />
             <RowDefinition Height="Auto" />
@@ -52,15 +52,11 @@
             </Button>
         </Grid>
         
-        <Grid Grid.Row="1" Name="PART_ToolBar">
-            
+        <Grid Grid.Row="1" Name="PART_FolderTree">
+            <views:FileDataView DataContext="{Binding FileData, Mode=OneWay}" />
         </Grid>
         
-        <Grid Grid.Row="2" Name="PART_FolderTree">
-            
-        </Grid>
-        
-        <Grid Grid.Row="3" Name="PART_StatusBar" Panel.ZIndex="1">
+        <Grid Grid.Row="2" Name="PART_StatusBar" Panel.ZIndex="1">
             <controls:ProgressReporter 
                 Progress="{Binding ProgressReporter.Progress, Mode=OneWay}"
                 Status="{Binding ProgressReporter.Status, Mode=OneWay}" />
@@ -68,7 +64,7 @@
         
         <controls:BusyLayer
             Grid.Row="1"
-            Grid.RowSpan="3"
-            Visibility="{Binding IsBusy, Mode=OneWay, Source={x:Static local:BusyLayerController.Instance}, Converter={StaticResource VisibilityConverter}}"/>
+            Grid.RowSpan="2"
+            Visibility="{Binding BusyLayer.IsBusy, Mode=OneWay, Converter={StaticResource VisibilityConverter}}"/>
     </Grid>
 </Window>

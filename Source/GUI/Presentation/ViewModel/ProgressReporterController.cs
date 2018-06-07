@@ -5,27 +5,30 @@ using System.Text;
 
 namespace OFDRExtractor.GUI
 {
-	sealed class ProgressReporterController : ViewModelBase, IProgressReporter
+	sealed class ProgressReporterController : ViewModelBase, IProgressReporterController, IProgressReporter
 	{
 		private ProgressReporterController() { }
-		
+
 		private static readonly ProgressReporterController instance = new ProgressReporterController();
 		public static ProgressReporterController Instance
 		{
 			get { return instance; }
 		}
 
+		#region IProgressReporterController
+		
 		private double progress = 0;
 		public double Progress
 		{
 			get { return this.progress; }
-			private set
+		}
+
+		private void setProgress(double value)
+		{
+			if (this.progress != value)
 			{
-				if (this.progress != value)
-				{
-					this.progress = value;
-					NotifyPropertyChanged("Progress");
-				}
+				this.progress = value;
+				NotifyPropertyChanged("Progress");
 			}
 		}
 
@@ -33,32 +36,35 @@ namespace OFDRExtractor.GUI
 		public string Status
 		{
 			get { return this.status; }
-			private set
+		}
+
+		private void setStatus(string value)
+		{
+			if (this.status != value)
 			{
-				if (this.status != value)
-				{
-					this.status = value;
-					NotifyPropertyChanged("Status");
-				}
+				this.status = value;
+				NotifyPropertyChanged("Status");
 			}
 		}
+
+		#endregion IProgressReporterController
 
 		#region IProgressReporter
 
 		void IProgressReporter.Report(string status)
 		{
-			this.Status = status;
+			setStatus(status);
 		}
 
 		void IProgressReporter.Report(double percent)
 		{
-			this.Progress = percent;
+			setProgress(percent);
 		}
 
 		void IProgressReporter.Report(double percent, string status)
 		{
-			this.Progress = percent;
-			this.Status = status;
+			setProgress(percent);
+			setStatus(status);
 		}
 
 		void IProgressReporter.Start(string status)

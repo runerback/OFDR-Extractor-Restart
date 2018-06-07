@@ -53,11 +53,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Business\AppExitingHandler.cs" />
+    <Compile Include="Business\Controller\IFileDataController.cs" />
+    <Compile Include="Business\Controller\IFileDataProvider.cs" />
+    <Compile Include="Business\Controller\IProgressReporterController.cs" />
+    <Compile Include="Business\Controller\IToolBarController.cs" />
+    <Compile Include="Business\Enumerator\FileDataEnumerable.cs" />
+    <Compile Include="Business\Enumerator\FolderDataEnumerable.cs" />
     <Compile Include="Business\ExceptionWrapper.cs" />
-    <Compile Include="Business\IPopupController.cs" />
-    <Compile Include="Business\FileDataEnumerate.cs" />
+    <Compile Include="Business\Controller\IBusyLayerController.cs" />
+    <Compile Include="Business\Controller\IPopupController.cs" />
+    <Compile Include="Business\Enumerator\SelectableManagerEnumerable.cs" />
     <Compile Include="Business\Popup.cs" />
-    <Compile Include="Business\SelectableManager.cs" />
+    <Compile Include="Business\Selectable\ISelectableManager.cs" />
+    <Compile Include="Business\Selectable\SelectableManager.cs" />
     <Compile Include="Business\Unpack\NFSRootLoader.cs" />
     <Compile Include="Business\Unpack\Unpacker.cs" />
     <Compile Include="Controls\BusyLayer.cs" />
@@ -67,7 +75,7 @@
     <Compile Include="Controls\ProgressReporter.cs" />
     <Compile Include="Model\FileData.cs" />
     <Compile Include="Model\FolderData.cs" />
-    <Compile Include="Business\ISelectable.cs" />
+    <Compile Include="Business\Selectable\ISelectable.cs" />
     <Compile Include="Model\SelectableBase.cs" />
     <Compile Include="Mvvm\AutoInvokeObservableCollection.cs" />
     <Compile Include="Mvvm\Behaviors\CloseWindowBehavior.cs" />
@@ -84,11 +92,19 @@
     <Compile Include="Presentation\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Presentation\ViewModel\BusyLayerController.cs" />
+    <Compile Include="Presentation\ViewModel\BusyLayerViewModel.cs" />
+    <Compile Include="Presentation\ViewModel\FileDataViewModel.cs" />
     <Compile Include="Presentation\ViewModel\ProgressReporterController.cs" />
     <Compile Include="Presentation\ViewModel\ShellViewModel.cs" />
+    <Compile Include="Presentation\ViewModel\ToolBarViewModel.cs" />
+    <Compile Include="Presentation\View\FileDataView.xaml.cs">
+      <DependentUpon>FileDataView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Presentation\View\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\View\ToolBar.xaml.cs">
+      <DependentUpon>ToolBar.xaml</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
   </ItemGroup>
@@ -105,7 +121,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Presentation\View\FileDataView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Presentation\View\ShellView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\View\ToolBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

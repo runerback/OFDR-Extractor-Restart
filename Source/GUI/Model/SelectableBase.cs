@@ -7,7 +7,10 @@ namespace OFDRExtractor.GUI.Model
 {
 	class SelectableBase : ViewModelBase, Business.ISelectable
 	{
-		protected SelectableBase() { }
+		protected SelectableBase()
+		{
+			this.ShouldRaiseEvent = true;
+		}
 
 		private bool isSelected;
 		public bool IsSelected
@@ -19,16 +22,23 @@ namespace OFDRExtractor.GUI.Model
 				{
 					this.isSelected = value;
 					NotifyPropertyChanged("IsSelected");
-					RaiseIsSelectedChanged();
+
+					onIsSelectedChanged();
+					if (this.ShouldRaiseEvent)
+						RaiseIsSelectedChanged();
 				}
 			}
 		}
 
+		internal bool ShouldRaiseEvent { get; set; }
+
 		public event EventHandler IsSelectedChanged;
-		private void RaiseIsSelectedChanged()
+		protected void RaiseIsSelectedChanged()
 		{
 			if (IsSelectedChanged != null)
 				IsSelectedChanged(this, EventArgs.Empty);
 		}
+
+		protected virtual void onIsSelectedChanged() { }
 	}
 }

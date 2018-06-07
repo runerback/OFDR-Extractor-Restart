@@ -38,7 +38,6 @@ namespace OFDRExtractor.GUI
 			if (working)
 				throw new InvalidOperationException("Unpack operation has already in running");
 			working = true;
-			BusyLayerController.Instance.Busy();
 
 			var task = Task.Factory.StartNew<T>(() =>
 			{
@@ -52,7 +51,6 @@ namespace OFDRExtractor.GUI
 					disposable.Dispose();
 
 				OFDRUnpacker.working = false;
-				BusyLayerController.Instance.Idle();
 
 				if (t.IsFaulted)
 				{

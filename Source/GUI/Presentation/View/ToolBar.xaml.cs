@@ -12,11 +12,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace OFDRExtractor.GUI
+namespace OFDRExtractor.GUI.Presentation.View
 {
-	partial class ShellView : Window
+	/// <summary>
+	/// Interaction logic for ToolBar.xaml
+	/// </summary>
+	public partial class ToolBar : UserControl
 	{
-		public ShellView()
+		public ToolBar()
 		{
 			InitializeComponent();
 		}
