@@ -9,11 +9,11 @@ namespace OFDRExtractor.GUI.Model
 	{
 		protected SelectableBase()
 		{
-			this.ShouldRaiseEvent = true;
+			this.ShouldNotifySelectionChanged = true;
 		}
 
-		private bool isSelected;
-		public bool IsSelected
+		private bool? isSelected = false;
+		public bool? IsSelected
 		{
 			get { return this.isSelected; }
 			set
@@ -23,14 +23,16 @@ namespace OFDRExtractor.GUI.Model
 					this.isSelected = value;
 					NotifyPropertyChanged("IsSelected");
 
-					onIsSelectedChanged();
-					if (this.ShouldRaiseEvent)
+					if (this.ShouldNotifySelectionChanged)
+					{
+						onIsSelectedChanged();
 						RaiseIsSelectedChanged();
+					}
 				}
 			}
 		}
 
-		internal bool ShouldRaiseEvent { get; set; }
+		internal bool ShouldNotifySelectionChanged { get; set; }
 
 		public event EventHandler IsSelectedChanged;
 		protected void RaiseIsSelectedChanged()

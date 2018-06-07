@@ -22,10 +22,11 @@ namespace OFDRExtractor.GUI.Business
 		
 		private void onIsSelectedChanged(object sender, EventArgs e)
 		{
-			updateStatus();
+			if (updateStatus())
+				raiseSelectionChanged();
 		}
 
-		private void updateStatus()
+		private bool updateStatus()
 		{
 			var isAllSelected = true;
 			var isAnySelected = false;
@@ -36,7 +37,7 @@ namespace OFDRExtractor.GUI.Business
 				while (selectedIterator.MoveNext())
 				{
 					var current = selectedIterator.Current;
-					if (!current.IsSelected)
+					if (!(current.IsSelected ?? false))
 					{
 						if (isAllSelected)
 							isAllSelected = false;
@@ -55,51 +56,71 @@ namespace OFDRExtractor.GUI.Business
 				}
 			}
 
-			this.IsAllSelected = isAllSelected;
-			this.IsAnySelected = isAnySelected;
-			this.SelectedFilesCount = selectedFiles.Count;
+			return setIsAllSelected(isAllSelected) ||
+				setIsAnySelected(isAnySelected) ||
+				setSelectedFilesCount(selectedFiles.Count);
 		}
+
+		#region IsAnySelected
 
 		private bool isAnySelected;
 		public bool IsAnySelected
 		{
 			get { return this.isAnySelected; }
-			private set
-			{
-				if (this.isAnySelected != value)
-				{
-					this.isAnySelected = value;
-				}
-			}
 		}
+
+		private bool setIsAnySelected(bool value)
+		{
+			if (this.isAnySelected != value)
+			{
+				this.isAnySelected = value;
+				return true;
+			}
+			return false;
+		}
+
+		#endregion IsAnySelected
+
+		#region IsAllSelected
 
 		private bool isAllSelected;
 		public bool IsAllSelected
 		{
 			get { return this.isAllSelected; }
-			private set
-			{
-				if (this.isAllSelected != value)
-				{
-					this.isAllSelected = value;
-				}
-			}
 		}
+
+		private bool setIsAllSelected(bool value)
+		{
+			if (this.isAllSelected != value)
+			{
+				this.isAllSelected = value;
+				return true;
+			}
+			return false;
+		}
+
+		#endregion IsAllSelected
+
+		#region SelectedFilesCount
 
 		private int selectedFilesCount;
 		public int SelectedFilesCount
 		{
 			get { return this.selectedFilesCount; }
-			private set
-			{
-				if (this.selectedFilesCount != value)
-				{
-					this.selectedFilesCount = value;
-					raiseSelectionChanged();
-				}
-			}
 		}
 
+		private bool setSelectedFilesCount(int value)
+		{
+			if (this.selectedFilesCount != value)
+			{
+				this.selectedFilesCount = value;
+				return true;
+			}
+			return false;
+		}
+
+		#endregion SelectedFilesCount
+		
 		private readonly HashSet<Model.FileData> selectedFiles = new HashSet<Model.FileData>();
 		public IEnumerable<Model.FileData> SelectedFiles
 		{

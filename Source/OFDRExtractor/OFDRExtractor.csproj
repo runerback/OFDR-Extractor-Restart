@@ -49,8 +49,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Business\Extractor\ExtractorInvoker.cs" />
-    <Compile Include="Business\Comparer\FolderTreeCompareLevel.cs" />
-    <Compile Include="Business\Comparer\FolderTreeComparer.cs" />
     <Compile Include="Business\Extractor\NFSFileExtractor.cs" />
     <Compile Include="Business\Comparer\NFSLineComparer.cs" />
     <Compile Include="Business\NFSTreeBuilder.cs" />
@@ -64,8 +62,6 @@
     <Compile Include="Model\NFS\NFSFolder.cs" />
     <Compile Include="Model\NFS\NFSLine.cs" />
     <Compile Include="Business\FolderSerializer.cs" />
-    <Compile Include="Model\Prepared\PreparedFile.cs" />
-    <Compile Include="Model\Prepared\PreparedFolder.cs" />
     <Compile Include="Model\NFS\NFSFolderBranch.cs" />
     <Compile Include="Model\NFS\NFSFolderBranchNode.cs" />
     <Compile Include="Model\XmlSerializable.cs" />

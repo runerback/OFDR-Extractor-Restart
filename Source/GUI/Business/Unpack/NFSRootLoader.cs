@@ -38,7 +38,7 @@ namespace OFDRExtractor.GUI.Business.Unpack
 				var builder = new NFSTreeBuilder(nfsFolderRoot, branchesManager);
 				var root = builder.Build(reporter);
 
-				return new Model.FolderData(root);
+				return new Model.FolderData(root, null);
 			}
 		}
 

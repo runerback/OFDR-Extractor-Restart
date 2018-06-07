@@ -7,7 +7,7 @@ namespace OFDRExtractor.GUI.Business
 {
 	interface ISelectable
 	{
-		bool IsSelected { get; set; }
+		bool? IsSelected { get; set; }
 		event EventHandler IsSelectedChanged;
 	}
 }

@@ -55,22 +55,11 @@
     <Compile Include="FileSizeFormatTest.cs" />
     <Compile Include="GenerateFoldersFromBranches.cs" />
     <Compile Include="NFSRootTest.cs" />
-    <Compile Include="PreparedRootTest.cs" />
     <Compile Include="ProgressReporterInConsole.cs" />
     <Compile Include="TwoRootTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="lines.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Properties\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="branches.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Source\Common\Common.csproj">

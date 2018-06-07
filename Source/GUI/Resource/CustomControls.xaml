@@ -126,7 +126,8 @@
                 </Grid.ColumnDefinitions>
                 
                 <CheckBox 
-                    IsChecked="{Binding Data.IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource TemplatedParent}}" />
+                    Name="PART_Selector"
+                    IsChecked="{Binding Data.IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource TemplatedParent}}" />                
                 <controls:HeaderBar 
                     Grid.Column="1" 
                     ToolTip="{Binding Data.Description, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}">
@@ -136,6 +137,11 @@
                 </controls:HeaderBar>
             </Grid>
         </Border>
+        <ControlTemplate.Triggers>
+            <DataTrigger Binding="{Binding HasAnyFiles, Mode=OneWay}" Value="False">
+                <Setter TargetName="PART_Selector" Property="Visibility" Value="Hidden" />
+            </DataTrigger>
+        </ControlTemplate.Triggers>
     </ControlTemplate>
     
     <ControlTemplate TargetType="controls:FileDataPresenter" x:Key="FileDataPresenterTemplate">

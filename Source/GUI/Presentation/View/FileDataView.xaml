@@ -22,7 +22,7 @@
 
         <TreeView 
             Grid.Row="1"
-            ItemsSource="{Binding RootSource, Mode=OneWay}" 
+            ItemsSource="{Binding RootSource, Mode=OneWay, IsAsync=True}" 
             BorderThickness="0" 
             IsTextSearchEnabled="False"
             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -105,7 +105,9 @@
                     </Setter>
                 </Style>
 
-                <HierarchicalDataTemplate DataType="{x:Type models:FolderData}" ItemsSource="{Binding Selectables, Mode=OneWay}">                    
+                <HierarchicalDataTemplate 
+                    DataType="{x:Type models:FolderData}" 
+                    ItemsSource="{Binding Selectables, Mode=OneWay, IsAsync=True}">                    
                     <controls:FolderDataPresenter Data="{Binding Mode=OneWay}" />
                 </HierarchicalDataTemplate>
 

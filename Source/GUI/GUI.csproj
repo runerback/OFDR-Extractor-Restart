@@ -59,6 +59,7 @@
     <Compile Include="Business\Controller\IToolBarController.cs" />
     <Compile Include="Business\Enumerator\FileDataEnumerable.cs" />
     <Compile Include="Business\Enumerator\FolderDataEnumerable.cs" />
+    <Compile Include="Business\Enumerator\SelectableEnumerable.cs" />
     <Compile Include="Business\ExceptionWrapper.cs" />
     <Compile Include="Business\Controller\IBusyLayerController.cs" />
     <Compile Include="Business\Controller\IPopupController.cs" />

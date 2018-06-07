@@ -11,3 +11,9 @@
 //set related core file as EmbedResources and never output, only expose branches.txt (which is made by myself...)
 //the whole plan: read all nfs lines -> build nfs root with branches -> unpack
 //the first two steps will be used in Refresh operation on UI
+//-------------------------------update 4-----------------------------------------------//
+//Remove prepared folder/file
+//change ISelectable to nullable in FolderData
+//add ParentFolder to FolderData
+//hide CheckBox if folder does not contain any file or folder
+//Selection still doesn't work well

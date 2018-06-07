@@ -25,6 +25,9 @@ namespace OFDRExtractor.Business
 			return output;
 		}
 
+		#region obsoleted
+
+		/*
 		public MemoryStream Serialize(Model.PreparedFolder root)
 		{
 			if (root == null)
@@ -44,6 +47,9 @@ namespace OFDRExtractor.Business
 			var serializer = new XmlSerializer(typeof(Model.PreparedFolder));
 			return serializer.Deserialize(stream) as Model.PreparedFolder;
 		}
+		*/
+
+		#endregion obsoleted
 
 		private XmlSerializerNamespaces getNamespaces()
 		{

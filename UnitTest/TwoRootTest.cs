@@ -37,15 +37,15 @@ namespace OFDRExtractor.UnitTest
 
 			//silly way to get PreparedFolderRoot
 			new GenerateFoldersFromBranches().GenerateDataWinFolderTree();
-			var preparedFolderTest = new PreparedRootTest();
-			preparedFolderTest.ReadPreparedRoot();
-			var preparedFolderRoot = preparedFolderTest.Root;
+			//var preparedFolderTest = new PreparedRootTest();
+			//preparedFolderTest.ReadPreparedRoot();
+			//var preparedFolderRoot = preparedFolderTest.Root;
 
-			bool areEquals = new FolderTreeComparer().AreEqual(
-				nfsFolderRoot, 
-				preparedFolderRoot, 
-				FolderTreeCompareLevel.Folder);
-			Assert.IsTrue(areEquals, "two root are not same");
+			//bool areEquals = new FolderTreeComparer().AreEqual(
+			//	nfsFolderRoot, 
+			//	preparedFolderRoot, 
+			//	FolderTreeCompareLevel.Folder);
+			//Assert.IsTrue(areEquals, "two root are not same");
 		}
 
 		[TestMethod]
