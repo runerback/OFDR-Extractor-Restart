@@ -17,3 +17,9 @@
 //add ParentFolder to FolderData
 //hide CheckBox if folder does not contain any file or folder
 //Selection still doesn't work well
+//-------------------------------update 5-----------------------------------------------//
+//the close symbol not work in all computer, need to change
+//the selected files count not update
+//cannot extract file from this, but unpack directly works. (resolved)
+//extractor in core does not need report progress for single file unpack operation.
+//unpack operation block the UI, put to task queue.

@@ -50,7 +50,42 @@ namespace OFDRExtractor.GUI.Business.Unpack
 			if (files == null || !files.Any())
 				return false;
 
-			throw new NotImplementedException();
+			var reporter = this.reporter;
+
+			var exceptions = new List<Tuple<string, Exception>>();
+
+			//TODO: UI blocked, create a task queue.
+			var extractor = new OFDRExtractor.Business.NFSFileExtractor();
+			foreach (var file in files)
+			{
+				try
+				{
+					extractor.Extract(file.Source, reporter).Wait();
+				}
+				catch(Exception exp)
+				{
+					exceptions.Add(Tuple.Create(file.Name, exp));
+				}
+			}
+
+			if (exceptions.Count > 0)
+			{
+				var errorDetailBuilder = new StringBuilder();
+				foreach (var exception in exceptions)
+				{
+					errorDetailBuilder.AppendLine(
+						string.Format("file \"{0}\" unpack failed: {1}",
+							exception.Item1,
+							exception.Item2));
+				}
+				Popup.Show(
+					System.Windows.Application.Current.Dispatcher,
+					"Error occurred while unpack files",
+					"click [More info] for details",
+					errorDetailBuilder.ToString());
+				return false;
+			}
+			return true;
 		}
 
 		#region Dispose

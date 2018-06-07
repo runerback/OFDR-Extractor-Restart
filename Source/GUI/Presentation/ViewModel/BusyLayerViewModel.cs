@@ -27,7 +27,7 @@ namespace OFDRExtractor.GUI
 		{
 			if (value != this.isBusy)
 			{
-				this.isBusy = true;
+				this.isBusy = value;
 				NotifyPropertyChanged("IsBusy");
 			}
 		}
@@ -39,7 +39,7 @@ namespace OFDRExtractor.GUI
 
 		void IBusyLayerController.Idle()
 		{
-			setIsBusy(true);
+			setIsBusy(false);
 		}
 
 		#endregion IBusyLayerController

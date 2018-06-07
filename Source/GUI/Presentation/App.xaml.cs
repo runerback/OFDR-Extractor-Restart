@@ -35,7 +35,15 @@ namespace OFDRExtractor.GUI
 
 		void onDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
 		{
-			Popup.Show(e.Dispatcher, e.Exception);
+			try
+			{
+				Popup.Show(e.Dispatcher, e.Exception);
+			}
+			catch
+			{
+				//sometimes exception occurred before dispatcher run.
+				Popup.Show(e.Exception); 
+			}
 			e.Handled = true;
 
 			if (!this.MainWindow.IsVisible)

@@ -22,8 +22,10 @@ namespace OFDRExtractor.GUI.Business
 		
 		private void onIsSelectedChanged(object sender, EventArgs e)
 		{
-			if (updateStatus())
-				raiseSelectionChanged();
+			//TODO: this should fire after folder handled, but it's impossible
+			//if (updateStatus())
+			//    raiseSelectionChanged();
+			RaiseStatusChanged();
 		}
 
 		private bool updateStatus()
@@ -32,33 +34,61 @@ namespace OFDRExtractor.GUI.Business
 			var isAnySelected = false;
 
 			var selectedFiles = this.selectedFiles;
-			using (var selectedIterator = this.source.Selectables.GetEnumerator())
+			//using (var selectedIterator = this.source.Selectables.GetEnumerator())
+			//{
+			//    while (selectedIterator.MoveNext())
+			//    {
+			//        var current = selectedIterator.Current;
+			//        if (!(current.IsSelected ?? false))
+			//        {
+			//            if (isAllSelected)
+			//                isAllSelected = false;
+
+			//            if (current is Model.FileData)
+			//                selectedFiles.Remove((Model.FileData)current);
+			//        }
+			//        else
+			//        {
+			//            if (!isAnySelected)
+			//                isAnySelected = true;
+
+			//            if (current is Model.FileData)
+			//                selectedFiles.Add((Model.FileData)current);
+			//        }
+			//    }
+			//}
+
+			using (var fileIterator = this.source.Files.GetEnumerator())
 			{
-				while (selectedIterator.MoveNext())
+				while (fileIterator.MoveNext())
 				{
-					var current = selectedIterator.Current;
+					var current = fileIterator.Current;
 					if (!(current.IsSelected ?? false))
 					{
 						if (isAllSelected)
 							isAllSelected = false;
 
-						if (current is Model.FileData)
-							selectedFiles.Remove((Model.FileData)current);
+						selectedFiles.Remove((Model.FileData)current);
 					}
 					else
 					{
 						if (!isAnySelected)
 							isAnySelected = true;
 
-						if (current is Model.FileData)
-							selectedFiles.Add((Model.FileData)current);
+						selectedFiles.Add((Model.FileData)current);
 					}
 				}
 			}
 
-			return setIsAllSelected(isAllSelected) ||
-				setIsAnySelected(isAnySelected) ||
+			return setIsAllSelected(isAllSelected) |
+				setIsAnySelected(isAnySelected) |
 				setSelectedFilesCount(selectedFiles.Count);
+		}
+
+		internal void RaiseStatusChanged()
+		{
+			if (updateStatus())
+				raiseSelectionChanged();
 		}
 
 		#region IsAnySelected

@@ -44,16 +44,16 @@ namespace OFDRExtractor.Business
 					{
 						if (report)
 							reporter.Report(0, null);
-						return;
+						throw t.Exception.Flatten();
 					}
 
 					if (report)
-						reporter.Report(50);
+						reporter.Report(0.5);
 
 					string destFolder = checkDirectory(file);
 
 					if (report)
-						reporter.Report(80);
+						reporter.Report(0.8);
 
 					moveFile(file, destFolder);
 
@@ -69,9 +69,19 @@ namespace OFDRExtractor.Business
 
 		private Task extractFile(NFSFile file)
 		{
-			//TODO: check whether order start from 0 or 1 in extractor.
-			this.invoker.Invoke(
-				string.Format("{0} {1}", file.Name, file.Order + 1));
+			//order start from 1 in extractor, and hide if first.
+			//such as for first xxx.xxx use origin name, for second use xxx.xxx 2
+			
+			//this.invoker.Invoke(
+			//    string.Format("{0} {1}", file.Name, file.Order + 1));
+
+			string filename;
+			if (file.Order > 0)
+				filename = string.Format("{0} {1}", file.Name, file.Order + 1);
+			else
+				filename = file.Name;
+			this.invoker.Invoke(filename);
+
 			this.nfsReadBlock = new AutoResetEvent(false);
 			return Task.Factory.StartNew(() =>
 			{

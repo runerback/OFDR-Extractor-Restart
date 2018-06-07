@@ -20,12 +20,15 @@
 
     <Style TargetType="controls:BusyLayer">
         <Setter Property="HorizontalAlignment" Value="Stretch" />
-        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
         <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="Margin" Value="3" />
-        <Setter Property="Padding" Value="3" />
-        <Setter Property="Background" Value="#33123456" />
+        <Setter Property="Margin" Value="-3" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Visibility" Value="Collapsed" />
+        <Setter Property="Foreground" Value="{StaticResource MainHighlightBrush}" />
+        <Setter Property="Background" Value="#33654321" />
+        <Setter Property="Template" Value="{DynamicResource BusyLayerTemplate}" />
     </Style>
 
     <Style TargetType="controls:HeaderBar">
@@ -72,7 +75,13 @@
             </Style>
         </ControlTemplate.Resources>
 
-        <Border Margin="{TemplateBinding Margin}" HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalAlignment}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
+        <Border 
+            Margin="{TemplateBinding Margin}" 
+            HorizontalAlignment="{TemplateBinding HorizontalAlignment}" 
+            VerticalAlignment="{TemplateBinding VerticalAlignment}" 
+            BorderBrush="{TemplateBinding BorderBrush}" 
+            BorderThickness="{TemplateBinding BorderThickness}" 
+            Background="{TemplateBinding Background}">
             <Grid>
                 <Rectangle 
                     Fill="{TemplateBinding ProgressBarBrush}" 
@@ -89,6 +98,70 @@
                     HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" />
             </Grid>
         </Border>
+    </ControlTemplate>
+    
+    <ControlTemplate TargetType="controls:BusyLayer" x:Key="BusyLayerTemplate">
+        <Border 
+            Margin="{TemplateBinding Margin}" 
+            Padding="{TemplateBinding Padding}"
+            HorizontalAlignment="{TemplateBinding HorizontalAlignment}" 
+            VerticalAlignment="{TemplateBinding VerticalAlignment}" 
+            BorderBrush="{TemplateBinding BorderBrush}" 
+            BorderThickness="{TemplateBinding BorderThickness}" 
+            Background="{TemplateBinding Background}">
+            <Grid Background="Transparent">
+                <TextBlock 
+                    Name="PART_BusyBar"
+                    Text="Hold . . ." 
+                    Foreground="{TemplateBinding Foreground}"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource H2}">
+                    <TextBlock.RenderTransform>
+                        <ScaleTransform 
+                            x:Name="PART_BusyBar_Scale" 
+                            ScaleX=".96"
+                            ScaleY=".96"/>
+                    </TextBlock.RenderTransform>
+                </TextBlock>
+            </Grid>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="Visibility" Value="Visible">
+                <Trigger.EnterActions>
+                    <BeginStoryboard>
+                        <Storyboard RepeatBehavior="Forever">
+                            <DoubleAnimation 
+                                Storyboard.TargetName="PART_BusyBar"
+                                Storyboard.TargetProperty="Opacity"
+                                AccelerationRatio=".3"
+                                AutoReverse="True"
+                                DecelerationRatio=".1"
+                                Duration="00:00:03"
+                                To=".1" />
+                            <DoubleAnimation 
+                                Storyboard.TargetName="PART_BusyBar_Scale"
+                                Storyboard.TargetProperty="ScaleX"
+                                AccelerationRatio=".1"
+                                DecelerationRatio=".3"
+                                AutoReverse="True"
+                                FillBehavior="HoldEnd"
+                                Duration="00:00:05"
+                                To="1.12" />
+                            <DoubleAnimation 
+                                Storyboard.TargetName="PART_BusyBar_Scale"
+                                Storyboard.TargetProperty="ScaleY"
+                                AutoReverse="True"
+                                FillBehavior="HoldEnd"
+                                AccelerationRatio=".1"
+                                DecelerationRatio=".3"
+                                Duration="00:00:05"
+                                To="1.12" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </Trigger.EnterActions>
+            </Trigger>
+        </ControlTemplate.Triggers>
     </ControlTemplate>
 
     <ControlTemplate TargetType="controls:HeaderBar" x:Key="HeaderBarTemplate">

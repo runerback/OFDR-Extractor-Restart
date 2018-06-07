@@ -8,6 +8,5 @@ namespace OFDRExtractor.GUI.Controls
 {
 	sealed class BusyLayer : Control
 	{
-		public BusyLayer() { }
 	}
 }

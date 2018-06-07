@@ -33,7 +33,7 @@ namespace OFDRExtractor.GUI.Presentation.ViewModel
 
 		private void onUnpackCompleted(object sender, EventArgs e)
 		{
-			Popup.Show("unpack completed");
+			//Popup.Show("unpack completed");
 		}
 
 		#endregion toolbar

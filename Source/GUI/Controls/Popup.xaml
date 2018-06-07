@@ -63,7 +63,7 @@
                         </Grid.ColumnDefinitions>
 
                         <Button 
-                            Content="Details" 
+                            Content="More info" 
                             Grid.Column="1" 
                             VerticalAlignment="Center"
                             Visibility="{Binding HasDetails, Mode=OneWay, Converter={StaticResource VisibilityConverter}}"

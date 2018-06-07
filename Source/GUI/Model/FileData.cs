@@ -22,7 +22,7 @@ namespace OFDRExtractor.GUI.Model
 		}
 
 		private readonly NFSFile source;
-		public NFSFile Souce
+		public NFSFile Source
 		{
 			get { return this.source; }
 		}

@@ -9,7 +9,10 @@ namespace OFDRExtractor.GUI
 {
 	sealed class ShellViewModel : ViewModelBase
 	{
-		private ShellViewModel() { }
+		private ShellViewModel()
+		{
+			this.fileDataController.ToolBarController.RefreshCommand.Execute(null);
+		}
 
 		public static readonly ShellViewModel Instance = new ShellViewModel();
 

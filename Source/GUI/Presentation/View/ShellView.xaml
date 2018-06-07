@@ -51,20 +51,18 @@
                 </i:Interaction.Behaviors>
             </Button>
         </Grid>
-        
-        <Grid Grid.Row="1" Name="PART_FolderTree">
-            <views:FileDataView DataContext="{Binding FileData, Mode=OneWay}" />
-        </Grid>
-        
-        <Grid Grid.Row="2" Name="PART_StatusBar" Panel.ZIndex="1">
-            <controls:ProgressReporter 
-                Progress="{Binding ProgressReporter.Progress, Mode=OneWay}"
-                Status="{Binding ProgressReporter.Status, Mode=OneWay}" />
-        </Grid>
-        
+
+        <views:FileDataView 
+            Grid.Row="1"
+            DataContext="{Binding FileData, Mode=OneWay}" />
+
         <controls:BusyLayer
             Grid.Row="1"
-            Grid.RowSpan="2"
             Visibility="{Binding BusyLayer.IsBusy, Mode=OneWay, Converter={StaticResource VisibilityConverter}}"/>
+
+        <controls:ProgressReporter 
+            Grid.Row="2"
+            Progress="{Binding ProgressReporter.Progress, Mode=OneWay}"
+            Status="{Binding ProgressReporter.Status, Mode=OneWay}" />
     </Grid>
 </Window>

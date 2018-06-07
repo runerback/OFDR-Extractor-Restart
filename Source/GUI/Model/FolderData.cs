@@ -81,7 +81,7 @@ namespace OFDRExtractor.GUI.Model
 			get { return this.hasAnyFiles; }
 		}
 
-		private readonly ISelectableManager selecableManager;
+		private readonly Business.SelectableManager selecableManager;
 		public ISelectableManager SelectableManager
 		{
 			get { return this.selecableManager; }
@@ -91,7 +91,7 @@ namespace OFDRExtractor.GUI.Model
 		{
 			bool? isSelected = this.IsSelected;
 
-			if (!isSelected.HasValue) 
+			if (!isSelected.HasValue)
 				return;
 
 			foreach (var folder in new Business.FolderDataEnumerable(this))
@@ -106,6 +106,9 @@ namespace OFDRExtractor.GUI.Model
 				folder.IsSelected = isSelected;
 				folder.ShouldNotifySelectionChanged = true;
 			}
+
+			if(this.selecableManager!=null)
+				this.selecableManager.RaiseStatusChanged();
 		}
 
 		private void onSelectionChanged(object sender, EventArgs e)
