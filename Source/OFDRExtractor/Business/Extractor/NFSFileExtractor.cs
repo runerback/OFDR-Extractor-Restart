@@ -130,7 +130,8 @@ namespace OFDRExtractor.Business
 		private void moveFile(NFSFile file, string destFolder)
 		{
 			string filename = file.Name;
-			string sourceFile = Path.Combine(this.rootPath, filename);
+			
+			string sourceFile = Path.Combine(this.rootPath, filename + file.Order > 0 ? file.Order + 1 : null);
 			string destFile = Path.Combine(destFolder, filename);
 			File.Copy(sourceFile, destFile, true);
 			File.Delete(sourceFile);
