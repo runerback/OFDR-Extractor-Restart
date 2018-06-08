@@ -35,7 +35,7 @@ namespace OFDRExtractor.GUI.Model
 				this.IsSelected = true;
 
 			this.selecableManager = new Business.SelectableManager(this);
-			this.selecableManager.SelectionChanged += onSelectionChanged;
+			this.selecableManager.InternalSelectionChanged += onSelectionChanged;
 		}
 
 		private readonly NFSFolder source;
@@ -86,32 +86,40 @@ namespace OFDRExtractor.GUI.Model
 		{
 			get { return this.selecableManager; }
 		}
+		
+		private void onSelectionChanged(object sender, Business.SelectionChangedEventArgs e)
+		{
+			switch (e.SourceType)
+			{
+				case Business.SelectableType.File:
+						onFileSelectionChanged();
+					break;
+				case Business.SelectableType.Folder:
+						onCurrentFolderSelectionChanged();
+					break;
+				default: break;
+			}
+		}
 
-		protected override void onIsSelectedChanged()
+		#region FolderSelectionChanged
+
+		private void onCurrentFolderSelectionChanged()
 		{
 			bool? isSelected = this.IsSelected;
 
-			if (!isSelected.HasValue)
-				return;
+			if (!isSelected.HasValue) return;
 
-			foreach (var folder in new Business.FolderDataEnumerable(this))
-			{
-				foreach (var file in folder.files)
-				{
-					file.ShouldNotifySelectionChanged = false;
-					file.IsSelected = isSelected;
-					file.ShouldNotifySelectionChanged = true;
-				}
-				folder.ShouldNotifySelectionChanged = false;
+			foreach (var file in this.files)
+				file.SetIsSelected(isSelected);
+			foreach (var folder in this.subFolders)
 				folder.IsSelected = isSelected;
-				folder.ShouldNotifySelectionChanged = true;
-			}
-
-			if(this.selecableManager!=null)
-				this.selecableManager.RaiseStatusChanged();
 		}
 
-		private void onSelectionChanged(object sender, EventArgs e)
+		#endregion FolderSelectionChanged
+
+		#region FileSelectionChanged
+
+		private void onFileSelectionChanged()
 		{
 			var target = this;
 			while (target != null)
@@ -123,8 +131,6 @@ namespace OFDRExtractor.GUI.Model
 
 		private void updateFolderSelectionState()
 		{
-			this.ShouldNotifySelectionChanged = false;
-
 			bool allSelected = true;
 			bool anySelected = false;
 
@@ -143,13 +149,15 @@ namespace OFDRExtractor.GUI.Model
 			}
 
 			if (allSelected)
-				this.IsSelected = true;
+				SetIsSelected(true);
 			else if (anySelected)
-				this.IsSelected = null;
+				SetIsSelected(null);
 			else
-				this.IsSelected = false;
-
-			this.ShouldNotifySelectionChanged = true;
+				SetIsSelected(false);
 		}
+
+		#endregion FileSelectionChanged
+
+		
 	}
 }

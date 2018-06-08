@@ -14,7 +14,7 @@ namespace OFDRExtractor.GUI.Business
 				throw new ArgumentNullException("source");
 
 			this.source = source;
-			foreach (var selectable in source.Selectables)
+			foreach (var selectable in new SelectableEnumerable(source, false))
 				selectable.IsSelectedChanged += onIsSelectedChanged;
 		}
 
@@ -22,10 +22,28 @@ namespace OFDRExtractor.GUI.Business
 		
 		private void onIsSelectedChanged(object sender, EventArgs e)
 		{
-			//TODO: this should fire after folder handled, but it's impossible
-			//if (updateStatus())
-			//    raiseSelectionChanged();
-			RaiseStatusChanged();
+			if (sender is Model.FolderData)
+			{
+				raiseInternalSelectionChanged(SelectableType.Folder);
+				if (updateStatus())
+				{
+					//files under current folder selection changed
+					raiseInternalSelectionChanged(SelectableType.File); 
+					raiseSelectionChanged();
+				}
+			}
+			else if (sender is Model.FileData)
+			{
+				if (updateStatus())
+				{
+					raiseInternalSelectionChanged(SelectableType.File);
+					raiseSelectionChanged();
+				}
+			}
+			else
+				throw new NotSupportedException("source is not a ISelectable");
+
+
 		}
 
 		private bool updateStatus()
@@ -83,12 +101,6 @@ namespace OFDRExtractor.GUI.Business
 			return setIsAllSelected(isAllSelected) |
 				setIsAnySelected(isAnySelected) |
 				setSelectedFilesCount(selectedFiles.Count);
-		}
-
-		internal void RaiseStatusChanged()
-		{
-			if (updateStatus())
-				raiseSelectionChanged();
 		}
 
 		#region IsAnySelected
@@ -157,6 +169,13 @@ namespace OFDRExtractor.GUI.Business
 			get { return this.selectedFiles; }
 		}
 
+		internal event EventHandler<SelectionChangedEventArgs> InternalSelectionChanged;
+		private void raiseInternalSelectionChanged(SelectableType sourceType)
+		{
+			if (InternalSelectionChanged != null)
+				InternalSelectionChanged(this, new SelectionChangedEventArgs(sourceType));
+		}
+
 		public event EventHandler SelectionChanged;
 		private void raiseSelectionChanged()
 		{
@@ -172,7 +191,7 @@ namespace OFDRExtractor.GUI.Business
 			if (disposed) return;
 			if (disposing)
 			{
-				foreach (var selectable in source.Selectables)
+				foreach (var selectable in new SelectableEnumerable(this.source, false))
 					selectable.IsSelectedChanged -= onIsSelectedChanged;
 			}
 			this.disposed = true;

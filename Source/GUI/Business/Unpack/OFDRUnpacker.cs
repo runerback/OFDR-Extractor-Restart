@@ -24,7 +24,7 @@ namespace OFDRExtractor.GUI
 		public static Task Unpack(IProgressReporter reporter, IEnumerable<Model.FileData> files)
 		{
 			var unpacker = new Business.Unpack.Unpacker(reporter);
-			return startOperation<bool>(
+			return startOperation(
 				reporter,
 				() => unpacker.Unpack(files),
 				unpacker);

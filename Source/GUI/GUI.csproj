@@ -67,16 +67,21 @@
     <Compile Include="Business\Popup.cs" />
     <Compile Include="Business\Selectable\ISelectableManager.cs" />
     <Compile Include="Business\Selectable\SelectableManager.cs" />
+    <Compile Include="Business\Selectable\SelectableType.cs" />
+    <Compile Include="Business\Selectable\SelectionChangedEventArgs.cs" />
     <Compile Include="Business\Unpack\NFSRootLoader.cs" />
     <Compile Include="Business\Unpack\Unpacker.cs" />
     <Compile Include="Controls\BusyLayer.cs" />
+    <Compile Include="Controls\CloseButton.cs" />
     <Compile Include="Controls\FileDataPresenter.cs" />
+    <Compile Include="Controls\FileTreePresenter.cs" />
     <Compile Include="Controls\FolderDataPresenter.cs" />
     <Compile Include="Controls\HeaderBar.cs" />
     <Compile Include="Controls\Popup.xaml.cs">
       <DependentUpon>Popup.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\ProgressReporter.cs" />
+    <Compile Include="Controls\WindowTitleBar.cs" />
     <Compile Include="Model\FileData.cs" />
     <Compile Include="Model\FolderData.cs" />
     <Compile Include="Business\Selectable\ISelectable.cs" />
@@ -111,6 +116,7 @@
       <DependentUpon>ToolBar.xaml</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
+    <None Include="TODO.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="lib\" />

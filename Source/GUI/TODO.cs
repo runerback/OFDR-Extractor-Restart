@@ -20,6 +20,10 @@
 //-------------------------------update 5-----------------------------------------------//
 //the close symbol not work in all computer, need to change
 //the selected files count not update
-//cannot extract file from this, but unpack directly works. (resolved)
-//extractor in core does not need report progress for single file unpack operation.
+//cannot extract file from this, but unpack directly works.
+//extractor in core does not need report progress for each file unpack operation.
 //unpack operation block the UI, put to task queue.
+//show checkbox of root folder only when any files checked, or it will cost a long time. (resolve in later)
+//-------------------------------update 6-----------------------------------------------//
+//set WorkingDirectory on ExtractorInvoker
+//folder shows not select all when any empty inner folder

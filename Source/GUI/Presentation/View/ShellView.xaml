@@ -4,8 +4,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:OFDRExtractor.GUI.Controls"
-    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-    xmlns:behaviors="clr-namespace:OFDRExtractor.GUI.Mvvm.Behaviors"
     xmlns:local="clr-namespace:OFDRExtractor.GUI"
     xmlns:views="clr-namespace:OFDRExtractor.GUI.Presentation.View"
     Height="475" 
@@ -19,40 +17,16 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Grid Background="{StaticResource MainDeepBrush}" Margin="-3 -3 -3 3">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+        <controls:WindowTitleBar Background="{StaticResource MainDeepBrush}" Margin="-3 -3 -3 3">
+            <TextBlock 
+                Text="OFDR Unpack" 
+                Foreground="WhiteSmoke" 
+                Style="{StaticResource H3}" 
+                HorizontalAlignment="Left" 
+                VerticalAlignment="Center" />
+        </controls:WindowTitleBar>
 
-            <Grid Background="Transparent">
-                <i:Interaction.Behaviors>
-                    <behaviors:DragMoveBehavior />
-                </i:Interaction.Behaviors>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-
-                <TextBlock 
-                    Text="OFDR Unpack" 
-                    Foreground="WhiteSmoke" 
-                    Style="{StaticResource H3}" 
-                    HorizontalAlignment="Center" 
-                    VerticalAlignment="Center" 
-                    Grid.Column="1" />
-            </Grid>
-
-            <Button Grid.Column="1" Cursor="Hand" ToolTip="Close">
-                <TextBlock Text="&#10060;" FontSize="12" Foreground="IndianRed" />
-                <i:Interaction.Behaviors>
-                    <behaviors:CloseWindowBehavior />
-                </i:Interaction.Behaviors>
-            </Button>
-        </Grid>
-
-        <views:FileDataView 
+            <views:FileDataView 
             Grid.Row="1"
             DataContext="{Binding FileData, Mode=OneWay}" />
 

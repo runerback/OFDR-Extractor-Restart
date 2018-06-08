@@ -55,7 +55,6 @@
     <Compile Include="Business\Branches\NFSFolderBranchesManager.cs" />
     <Compile Include="Business\Comparer\PreparedFolderBranchNodeComparer.cs" />
     <Compile Include="Business\Branches\NFSFolderBranchRefMap.cs" />
-    <None Include="TODO.cs" />
     <Compile Include="Business\Extractor\Win000NFSReader.cs" />
     <Compile Include="Model\IName.cs" />
     <Compile Include="Model\NFS\NFSFile.cs" />

@@ -14,7 +14,7 @@ namespace OFDRExtractor.Business
 		public ExtractorInvoker()
 		{
 			if (!File.Exists(filename))
-				throw new FileNotFoundException(filename);
+				throw new FileNotFoundException("dat.exe no found.");
 			AppDomain.CurrentDomain.ProcessExit += onDomainExiting;
 		}
 

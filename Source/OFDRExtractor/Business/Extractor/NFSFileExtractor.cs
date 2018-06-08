@@ -25,40 +25,21 @@ namespace OFDRExtractor.Business
 			get { return !this.working; }
 		}
 
-		public Task Extract(NFSFile file, IProgressReporter reporter)
+		public Task Extract(NFSFile file)
 		{
 			if (working)
 				throw new InvalidOperationException("operation is already running");
 			if (file == null)
 				throw new ArgumentNullException("file");
 
-			bool report = reporter != null;
-
-			if (report)
-				reporter.Start(string.Format("extract \"{0}\"", file.Name));
-
 			return extractFile(file)
 				.ContinueWith(t =>
 				{
 					if (t.IsFaulted)
-					{
-						if (report)
-							reporter.Report(0, null);
 						throw t.Exception.Flatten();
-					}
-
-					if (report)
-						reporter.Report(0.5);
 
 					string destFolder = checkDirectory(file);
-
-					if (report)
-						reporter.Report(0.8);
-
 					moveFile(file, destFolder);
-
-					if (report)
-						reporter.Complete(string.Format("file \"{0}\" ready", file.Name));
 				});
 		}
 
@@ -130,9 +111,14 @@ namespace OFDRExtractor.Business
 		private void moveFile(NFSFile file, string destFolder)
 		{
 			string filename = file.Name;
-			
-			string sourceFile = Path.Combine(this.rootPath, filename + file.Order > 0 ? file.Order + 1 : null);
+
+			string order = null;
+			if (file.Order > 0)
+				order = (file.Order + 1).ToString();
+			string sourceFile = Path.Combine(this.rootPath, filename + order);
+
 			string destFile = Path.Combine(destFolder, filename);
+
 			File.Copy(sourceFile, destFile, true);
 			File.Delete(sourceFile);
 		}

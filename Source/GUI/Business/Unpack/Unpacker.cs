@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace OFDRExtractor.GUI.Business.Unpack
 {
@@ -16,56 +17,72 @@ namespace OFDRExtractor.GUI.Business.Unpack
 			AppExitingHandler.AppExiting += onAppExiting;
 		}
 
+		private bool working = false;
+
 		private readonly bool report;
 		private readonly IProgressReporter reporter;
-		private static readonly object unpackLock = new object();
 
-		public bool Unpack(IEnumerable<Model.FileData> files)
+		public Task Unpack(IEnumerable<Model.FileData> files)
 		{
-			lock (unpackLock)
-			{
-				try
-				{
-					return unpackMethod(files);
-				}
-				catch
-				{
-					throw;
-				}
-				finally
-				{
-					if (report)
-					{
-						var reporter = this.reporter;
+			if (working)
+				throw new InvalidOperationException("operation is already running");
+			this.working = true;
 
-						reporter.Report(0);
-						reporter.Report(null);
-					}
+			var task = Task.Factory.StartNew(() => 
+				unpackMethod(files));
+
+			task.ContinueWith(t =>
+			{
+				this.working = false;
+				if (report)
+					reporter.Report(0, null);
+
+				if (t.IsFaulted)
+				{
+					Popup.Show(
+						System.Windows.Application.Current.Dispatcher,
+						"Error occurred while unpack files",
+						"click [More info] for details",
+						new ExceptionWrapper(t.Exception).Details);
 				}
-			}
+			});
+
+			return task;
 		}
 
-		private bool unpackMethod(IEnumerable<Model.FileData> files)
+		private void unpackMethod(IEnumerable<Model.FileData> files)
 		{
 			if (files == null || !files.Any())
-				return false;
+				return;
 
+			var report = this.report;
 			var reporter = this.reporter;
 
 			var exceptions = new List<Tuple<string, Exception>>();
 
-			//TODO: UI blocked, create a task queue.
+			int total = files.Count();
+			int current = 0;
+
 			var extractor = new OFDRExtractor.Business.NFSFileExtractor();
 			foreach (var file in files)
 			{
+				if (this.disposed)
+					return;
+
+				if (report)
+					reporter.Report("extracting " + file.Name);
+
 				try
 				{
-					extractor.Extract(file.Source, reporter).Wait();
+					extractor.Extract(file.Source).Wait();
 				}
 				catch(Exception exp)
 				{
 					exceptions.Add(Tuple.Create(file.Name, exp));
 				}
+
+				if (report)
+					reporter.Report((double)(current++) / total);
 			}
 
 			if (exceptions.Count > 0)
@@ -78,14 +95,8 @@ namespace OFDRExtractor.GUI.Business.Unpack
 							exception.Item1,
 							exception.Item2));
 				}
-				Popup.Show(
-					System.Windows.Application.Current.Dispatcher,
-					"Error occurred while unpack files",
-					"click [More info] for details",
-					errorDetailBuilder.ToString());
-				return false;
+				throw new Exception(errorDetailBuilder.ToString());
 			}
-			return true;
 		}
 
 		#region Dispose

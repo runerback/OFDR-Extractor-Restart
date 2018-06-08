@@ -9,7 +9,7 @@ namespace OFDRExtractor.GUI.Model
 	{
 		protected SelectableBase()
 		{
-			this.ShouldNotifySelectionChanged = true;
+			//this.ShouldNotifySelectionChanged = true;
 		}
 
 		private bool? isSelected = false;
@@ -18,21 +18,23 @@ namespace OFDRExtractor.GUI.Model
 			get { return this.isSelected; }
 			set
 			{
-				if (this.isSelected != value)
-				{
-					this.isSelected = value;
-					NotifyPropertyChanged("IsSelected");
-
-					if (this.ShouldNotifySelectionChanged)
-					{
-						onIsSelectedChanged();
-						RaiseIsSelectedChanged();
-					}
-				}
+				//changed from UI
+				if (SetIsSelected(value))
+					RaiseIsSelectedChanged();
 			}
 		}
 
-		internal bool ShouldNotifySelectionChanged { get; set; }
+		//changed from backend
+		internal bool SetIsSelected(bool? value)
+		{
+			if (this.isSelected != value)
+			{
+				this.isSelected = value;
+				NotifyPropertyChanged("IsSelected");
+				return true;
+			}
+			return false;
+		}
 
 		public event EventHandler IsSelectedChanged;
 		protected void RaiseIsSelectedChanged()
@@ -40,7 +42,5 @@ namespace OFDRExtractor.GUI.Model
 			if (IsSelectedChanged != null)
 				IsSelectedChanged(this, EventArgs.Empty);
 		}
-
-		protected virtual void onIsSelectedChanged() { }
 	}
 }
