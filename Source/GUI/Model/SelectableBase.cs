@@ -5,12 +5,9 @@ using System.Text;
 
 namespace OFDRExtractor.GUI.Model
 {
-	class SelectableBase : ViewModelBase, Business.ISelectable
+	class SelectableBase : ViewModelBase
 	{
-		protected SelectableBase()
-		{
-			//this.ShouldNotifySelectionChanged = true;
-		}
+		protected SelectableBase() { }
 
 		private bool? isSelected = false;
 		public bool? IsSelected
@@ -18,32 +15,30 @@ namespace OFDRExtractor.GUI.Model
 			get { return this.isSelected; }
 			set
 			{
-				//changed from UI
 				if (SetIsSelected(value))
-					RaiseIsSelectedChanged();
+				{
+					if (IsSelectedChanged != null)
+						IsSelectedChanged(this, EventArgs.Empty);
+				}
 			}
 		}
 
-		//changed from backend
-		internal bool SetIsSelected(bool? value)
+		public bool SetIsSelected(bool? value)
 		{
 			if (this.isSelected != value)
 			{
 				this.isSelected = value;
 				NotifyPropertyChanged("IsSelected");
-				onPreviewIsSelectedChanged();
+
+				onIsSelectedChanged(value ?? false);
+
 				return true;
 			}
 			return false;
 		}
 
-		public event EventHandler IsSelectedChanged;
-		protected void RaiseIsSelectedChanged()
-		{
-			if (IsSelectedChanged != null)
-				IsSelectedChanged(this, EventArgs.Empty);
-		}
+		protected virtual void onIsSelectedChanged(bool isSelected) { }
 
-		protected virtual void onPreviewIsSelectedChanged() { }
+		public event EventHandler IsSelectedChanged;
 	}
 }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace OFDRExtractor.Business
 {
-	public sealed class NFSFileExtractor
+	public sealed class NFSFileExtractor : IDisposable
 	{
 		public NFSFileExtractor()
 		{
@@ -145,5 +145,38 @@ namespace OFDRExtractor.Business
 				get { return this.hasError; }
 			}
 		}
+		
+		#region Dispose
+
+		private void onDomainExiting(object sender, EventArgs e)
+		{
+			this.Dispose(true);
+		}
+
+		private bool disposed = false;
+		private void Dispose(bool disposing)
+		{
+			if (disposed) return;
+			if (disposing)
+			{
+				if (this.nfsReadBlock != null)
+				{
+					this.nfsReadBlock.Set();
+					this.nfsReadBlock.Dispose();
+					this.nfsReadBlock = null;
+				}
+				this.invoker.Dispose();
+			}
+			this.disposed = true;
+		}
+
+		public void Dispose()
+		{
+			this.Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		#endregion Dispose
+
 	}
 }

@@ -33,7 +33,7 @@ namespace OFDRExtractor.GUI.Presentation.ViewModel
 
 		private void onUnpackCompleted(object sender, EventArgs e)
 		{
-			//Popup.Show("unpack completed");
+
 		}
 
 		#endregion toolbar
@@ -49,28 +49,30 @@ namespace OFDRExtractor.GUI.Presentation.ViewModel
 			}
 		}
 
+		private SelectableManager selectableManager;
+
 		private void onFolderRootChanged(FolderData root)
 		{
-			if (this.root != null)
+			if (this.selectableManager != null)
 			{
-				foreach (var manager in new SelectableManagerEnumerable(this.root))
-				{
-					manager.SelectionChanged -= onSelectionChanged;
-					manager.Dispose();
-				}
+				this.selectableManager.SelectedFileCountChanged -= onSelectedFileCountChanged;
+				this.selectableManager.Dispose();
+				this.selectableManager = null;
 			}
 
 			this.root = root;
 			NotifyPropertyChanged("RootSource");
 
-			foreach (var manager in new SelectableManagerEnumerable(this.root))
+			if (root != null)
 			{
-				manager.SelectionChanged += onSelectionChanged;
+				this.selectableManager = new SelectableManager(root);
+				this.selectableManager.SelectedFileCountChanged += onSelectedFileCountChanged;
 			}
 		}
 
-		private void onSelectionChanged(object sender, EventArgs e)
+		private void onSelectedFileCountChanged(object sender, EventArgs e)
 		{
+			this.selectedFilesCount = this.selectableManager.SelectedFileCount;
 			raiseSelectedFilesCountChanged();
 		}
 
@@ -91,23 +93,17 @@ namespace OFDRExtractor.GUI.Presentation.ViewModel
 			get
 			{
 				if (this.root == null)
-					return Enumerable.Empty<FileData>();
-				return new SelectableManagerEnumerable(this.root)
-					.Where(item => item.IsAnySelected)
-					.SelectMany(item => item.SelectedFiles);
+					yield break;
+				foreach (var file in new FileDataEnumerable(this.root)
+					.Where(item => item.IsSelected == true))
+					yield return file;
 			}
 		}
 
+		private int selectedFilesCount = 0;
 		int IFileDataProvider.SelectedFilesCount
 		{
-			get
-			{
-				if (this.root == null)
-					return 0;
-				return new SelectableManagerEnumerable(this.root)
-					.Where(item => item.IsAnySelected)
-					.Sum(item => item.SelectedFilesCount);
-			}
+			get { return this.selectedFilesCount; }
 		}
 
 		private EventHandler SelectedFilesCountChangedHandler;

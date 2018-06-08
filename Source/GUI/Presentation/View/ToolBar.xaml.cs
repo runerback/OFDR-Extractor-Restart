@@ -14,10 +14,7 @@ using System.Windows.Shapes;
 
 namespace OFDRExtractor.GUI.Presentation.View
 {
-	/// <summary>
-	/// Interaction logic for ToolBar.xaml
-	/// </summary>
-	public partial class ToolBar : UserControl
+	partial class ToolBar : UserControl
 	{
 		public ToolBar()
 		{

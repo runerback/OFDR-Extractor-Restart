@@ -1,4 +1,5 @@
-﻿using OFDRExtractor.Model;
+﻿using OFDRExtractor.GUI.Business;
+using OFDRExtractor.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,9 +7,10 @@ using System.Text;
 
 namespace OFDRExtractor.GUI.Model
 {
-	sealed class FileData : SelectableBase
+	sealed class FileData : FileTreeItem
 	{
-		public FileData(NFSFile file)
+		public FileData(NFSFile file, FolderData parentFolder)
+			: base(parentFolder)
 		{
 			if (file == null)
 				throw new ArgumentNullException("file");
@@ -27,12 +29,6 @@ namespace OFDRExtractor.GUI.Model
 			get { return this.source; }
 		}
 
-		private string name;
-		public string Name
-		{
-			get { return this.name; }
-		}
-
 		private string filename;
 		public string Filename
 		{
@@ -49,6 +45,14 @@ namespace OFDRExtractor.GUI.Model
 		public string Size
 		{
 			get { return this.size; }
+		}
+
+		public event EventHandler<FileSelectionChangedEventArgs> FileSelectionChanged;
+
+		protected override void onIsSelectedChanged(bool isSelected)
+		{
+			if (FileSelectionChanged != null)
+				FileSelectionChanged(this, new FileSelectionChangedEventArgs(isSelected));
 		}
 
 		#region format file size

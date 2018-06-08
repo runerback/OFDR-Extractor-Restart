@@ -8,15 +8,15 @@ using System.Text;
 
 namespace OFDRExtractor.GUI.Model
 {
-	sealed class FolderData : SelectableBase
+	sealed class FolderData : FileTreeItem
 	{
 		public FolderData(NFSFolder folder, FolderData parentFolder)
+			: base(parentFolder)
 		{
 			if (folder == null)
 				throw new ArgumentNullException("folder");
 
 			this.source = folder;
-			this.parentFolder = parentFolder;
 
 			this.name = folder.Name;
 			this.description = folder.ToString();
@@ -24,33 +24,14 @@ namespace OFDRExtractor.GUI.Model
 			this.files = folder.Files
 				.OrderBy(item => item.Extension)
 				.ThenBy(item => item.Filename)
-				.Select(item => new FileData(item))
+				.Select(item => new FileData(item, this))
 				.ToArray();
-			if (folder.Name == "data_win")
-			{
-				this.subFolders = folder.Folders
-					.OrderBy(item => item.Name)
-					.Select(item => new FolderData(item, this))
-					.ToArray();
-			}
-			else
-			{
-				this.subFolders = new FolderData[0];
-			}
+			this.subFolders = folder.Folders
+				.OrderBy(item => item.Name)
+				.Select(item => new FolderData(item, this))
+				.ToArray();
 
 			this.hasAnyFiles = new Business.FileDataEnumerable(this).Any();
-
-			this.selecableManager = new Business.SelectableManager(this);
-			this.selecableManager.InternalSelectionChanged += onSelectionChanged;
-
-			if (folder.Name == "data_win")
-			{
-				foreach (var xxx in new SelectableManagerEnumerable(this))
-					Console.WriteLine("{0, 20}: all - {1}, any - {2}",
-						((Business.SelectableManager)xxx).source.name,
-						xxx.IsAllSelected,
-						xxx.IsAnySelected);
-			}
 		}
 
 		private readonly NFSFolder source;
@@ -59,19 +40,11 @@ namespace OFDRExtractor.GUI.Model
 			get { return this.source; }
 		}
 
-		private string name;
-		public string Name
-		{
-			get { return this.name; }
-		}
-
 		private string description;
 		public string Description
 		{
 			get { return this.description; }
 		}
-
-		private readonly FolderData parentFolder = null;
 
 		private readonly FolderData[] subFolders;
 		public IEnumerable<FolderData> SubFolders
@@ -85,9 +58,14 @@ namespace OFDRExtractor.GUI.Model
 			get { return this.files; }
 		}
 
-		public IEnumerable<Business.ISelectable> Selectables
+		public IEnumerable<SelectableBase> Selectables
 		{
-			get { return this.files.Concat<Business.ISelectable>(this.subFolders); }
+			get
+			{
+				return Enumerable.Empty<SelectableBase>()
+				.Concat(this.files)
+				.Concat(this.subFolders);
+			}
 		}
 
 		private bool hasAnyFiles;
@@ -96,103 +74,49 @@ namespace OFDRExtractor.GUI.Model
 			get { return this.hasAnyFiles; }
 		}
 
-		private readonly Business.SelectableManager selecableManager;
-		public ISelectableManager SelectableManager
+		private int selectedFilesCount = 0;
+		public int SelectedFilesCount
 		{
-			get { return this.selecableManager; }
+			get { return this.selectedFilesCount; }
 		}
-		
-		private void onSelectionChanged(object sender, Business.SelectionChangedEventArgs e)
+
+		public void UpdateFolderState(bool isSourceSelected)
 		{
-			switch (e.SourceType)
+			bool isAllSelected, isAnySelected;
+			UpdateSelectionState(isSourceSelected, out isAllSelected, out isAnySelected);
+
+			if (isAllSelected) SetIsSelected(true);
+			else if (isAnySelected) SetIsSelected(null);
+			else SetIsSelected(false);
+		}
+
+		private void UpdateSelectionState(bool isSourceSelected, out bool allSelected, out bool anySelected)
+		{
+			var allFiles = new FileDataEnumerable(this);
+			if (!allFiles.Any())
 			{
-				case Business.SelectableType.File:
-						onFileSelectionChanged();
-					break;
-				case Business.SelectableType.Folder:
-						onCurrentFolderSelectionChanged();
-					break;
-				default: break;
-			}
-		}
-
-		#region FolderSelectionChanged
-
-		private void onCurrentFolderSelectionChanged()
-		{
-			bool? isSelected = this.IsSelected;
-
-			if (!isSelected.HasValue) return;
-
-			foreach (var file in this.files)
-				file.SetIsSelected(isSelected);
-			foreach (var folder in this.subFolders)
-				folder.IsSelected = isSelected;
-		}
-
-		#endregion FolderSelectionChanged
-
-		#region FileSelectionChanged
-
-		private void onFileSelectionChanged()
-		{
-			var target = this;
-			while (target != null)
-			{
-				target.updateFolderSelectionState();
-				target = target.parentFolder;
-			}
-		}
-		private static int i = 0;
-		private const int t1 = 22;
-		private const int t2 = 12;
-		private static int t = t1;
-		private void updateFolderSelectionState()
-		{
-			Console.WriteLine("updateFolderSelectionState: {0}", this.name);
-
-			bool allSelected = true;
-			bool anySelected = false;
-
-			if (i++ == t && t == t1)
-			{
-				i = 0;
-				t = t2;
+				allSelected = isSourceSelected;
+				anySelected = isSourceSelected;
+				return;
 			}
 
+			allSelected = true;
+			anySelected = false;
 
-			//TODO: this is just rubbish
-			foreach (var manager in new Business.SelectableManagerEnumerable(this))
+			foreach (var isFileSelected in allFiles
+				.Select(item => item.IsSelected ?? false))
 			{
-				if (manager == this.selecableManager) continue;
-				//Console.WriteLine("({0}) {1}: all - {2}, any - {3}",
-				//	i,
-				//	((Business.SelectableManager)manager).source.name,
-				//	manager.IsAllSelected,
-				//	manager.IsAnySelected);
-
-				if (allSelected && !manager.IsAllSelected)
+				if (allSelected && !isFileSelected)
 				{
 					allSelected = false;
 					if (anySelected) break;
 				}
-				if (!anySelected && manager.IsAnySelected)
+				if (!anySelected && isFileSelected)
 				{
 					anySelected = true;
 					if (!allSelected) break;
 				}
 			}
-
-			if (allSelected)
-				SetIsSelected(true);
-			else if (anySelected)
-				SetIsSelected(null);
-			else
-				SetIsSelected(false);
 		}
-
-		#endregion FileSelectionChanged
-
-		
 	}
 }

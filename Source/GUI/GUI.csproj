@@ -60,15 +60,13 @@
     <Compile Include="Business\Enumerator\FileDataEnumerable.cs" />
     <Compile Include="Business\Enumerator\FolderDataEnumerable.cs" />
     <Compile Include="Business\Enumerator\SelectableEnumerable.cs" />
+    <Compile Include="Business\Enumerator\UpperFolderEnumerable.cs" />
     <Compile Include="Business\ExceptionWrapper.cs" />
     <Compile Include="Business\Controller\IBusyLayerController.cs" />
     <Compile Include="Business\Controller\IPopupController.cs" />
-    <Compile Include="Business\Enumerator\SelectableManagerEnumerable.cs" />
     <Compile Include="Business\Popup.cs" />
-    <Compile Include="Business\Selectable\ISelectableManager.cs" />
+    <Compile Include="Business\Selectable\FileSelectionChangedEventArgs.cs" />
     <Compile Include="Business\Selectable\SelectableManager.cs" />
-    <Compile Include="Business\Selectable\SelectableType.cs" />
-    <Compile Include="Business\Selectable\SelectionChangedEventArgs.cs" />
     <Compile Include="Business\Unpack\NFSRootLoader.cs" />
     <Compile Include="Business\Unpack\Unpacker.cs" />
     <Compile Include="Controls\BusyLayer.cs" />
@@ -83,8 +81,8 @@
     <Compile Include="Controls\ProgressReporter.cs" />
     <Compile Include="Controls\WindowTitleBar.cs" />
     <Compile Include="Model\FileData.cs" />
+    <Compile Include="Model\FileTreeItem.cs" />
     <Compile Include="Model\FolderData.cs" />
-    <Compile Include="Business\Selectable\ISelectable.cs" />
     <Compile Include="Model\SelectableBase.cs" />
     <Compile Include="Mvvm\AutoInvokeObservableCollection.cs" />
     <Compile Include="Mvvm\Behaviors\CloseWindowBehavior.cs" />

@@ -4,7 +4,7 @@ using System.Windows.Data;
 
 namespace OFDRExtractor.GUI.Mvvm.Converters
 {
-	public class AntiVisibilityConverter : IValueConverter
+	sealed class AntiVisibilityConverter : IValueConverter
 	{
 		object IValueConverter.Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{

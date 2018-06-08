@@ -14,10 +14,7 @@ using System.Windows.Shapes;
 
 namespace OFDRExtractor.GUI.Presentation.View
 {
-	/// <summary>
-	/// Interaction logic for FileDataView.xaml
-	/// </summary>
-	public partial class FileDataView : UserControl
+	partial class FileDataView : UserControl
 	{
 		public FileDataView()
 		{
