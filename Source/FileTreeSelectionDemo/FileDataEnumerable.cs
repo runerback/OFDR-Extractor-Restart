@@ -2,25 +2,25 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace OFDRExtractor.GUI.Business
+namespace FileTreeSelectionDemo
 {
-	sealed class SelectableManagerEnumerable : IEnumerable<ISelectableManager>
+	class FileDataEnumerable : IEnumerable<FileData>
 	{
-		public SelectableManagerEnumerable(Model.FolderData source)
+		public FileDataEnumerable(FolderData source)
 		{
 			if (source == null)
 				throw new ArgumentNullException("source");
 			this.source = source;
 		}
 
-		private readonly Model.FolderData source;
+		private readonly FolderData source;
 
-		public IEnumerator<ISelectableManager> GetEnumerator()
+		public IEnumerator<FileData> GetEnumerator()
 		{
 			return new FolderDataEnumerable(this.source)
-				.Where(item => item.HasAnyFiles)
-				.Select(item => item.SelectableManager)
+				.SelectMany(item => item.Files)
 				.GetEnumerator();
 		}
 

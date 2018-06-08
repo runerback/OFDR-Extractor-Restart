@@ -1,0 +1,69 @@
+﻿<Window x:Class="FileTreeSelectionDemo.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:FileTreeSelectionDemo"
+        WindowStartupLocation="CenterScreen"
+        Title="MainWindow" Height="600" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        
+        <Grid>
+            <TextBlock Margin="6">
+                <Run 
+                    Text="{Binding SelectedFileCount, Mode=OneWay}" 
+                    Foreground="DeepSkyBlue"
+                    FontWeight="SemiBold"
+                    />
+                <Run Text=" files selected" />
+            </TextBlock>
+        </Grid>
+        
+        <TreeView 
+            Grid.Row="1"
+            Margin="3"
+            ItemsSource="{Binding Source, Mode=OneWay}">
+            <TreeView.ItemTemplateSelector>
+                <local:TreeViewItemTemplateSelector>
+                    <local:TreeViewItemTemplateSelector.File>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <CheckBox IsThreeState="False" IsChecked="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Text="{Binding Name, Mode=OneWay}" Grid.Column="1" />
+                            </Grid>
+                        </DataTemplate>
+                    </local:TreeViewItemTemplateSelector.File>
+                    <local:TreeViewItemTemplateSelector.Folder>
+                        <HierarchicalDataTemplate
+                            ItemsSource="{Binding Selectables, Mode=OneWay}" >
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <CheckBox 
+                                    Name="PART_Selector"
+                                    IsThreeState="False" 
+                                    IsChecked="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Text="{Binding Name, Mode=OneWay}" Grid.Column="1" />
+                            </Grid>
+                            <HierarchicalDataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding HasAnyFiles}" Value="False">
+                                    <Setter TargetName="PART_Selector" Property="Visibility" Value="Hidden" />
+                                </DataTrigger>
+                            </HierarchicalDataTemplate.Triggers>
+                        </HierarchicalDataTemplate>
+                    </local:TreeViewItemTemplateSelector.Folder>
+                </local:TreeViewItemTemplateSelector>
+            </TreeView.ItemTemplateSelector>
+        </TreeView>
+    </Grid>
+</Window>

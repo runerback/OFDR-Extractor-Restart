@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Source\Common\Common.csproj", "{8073CCC5-B114-4ABE-8711-F34A56D65665}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileTreeSelectionDemo", "Source\FileTreeSelectionDemo\FileTreeSelectionDemo.csproj", "{7DF60769-F26F-4A7F-BD54-7C828F03424D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,14 +65,25 @@ Global
 		{8073CCC5-B114-4ABE-8711-F34A56D65665}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{8073CCC5-B114-4ABE-8711-F34A56D65665}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{8073CCC5-B114-4ABE-8711-F34A56D65665}.Release|x86.ActiveCfg = Release|Any CPU
+		{7DF60769-F26F-4A7F-BD54-7C828F03424D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DF60769-F26F-4A7F-BD54-7C828F03424D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DF60769-F26F-4A7F-BD54-7C828F03424D}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{7DF60769-F26F-4A7F-BD54-7C828F03424D}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{7DF60769-F26F-4A7F-BD54-7C828F03424D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7DF60769-F26F-4A7F-BD54-7C828F03424D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DF60769-F26F-4A7F-BD54-7C828F03424D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DF60769-F26F-4A7F-BD54-7C828F03424D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{7DF60769-F26F-4A7F-BD54-7C828F03424D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{7DF60769-F26F-4A7F-BD54-7C828F03424D}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{1C75DA1A-26AC-4156-B794-7D8C41F5DED5} = {69BB78FE-DFB9-48F3-B9F3-FFDE34644202}
 		{E62EA639-7FD8-4655-917C-B31500A0674E} = {69BB78FE-DFB9-48F3-B9F3-FFDE34644202}
+		{1C75DA1A-26AC-4156-B794-7D8C41F5DED5} = {69BB78FE-DFB9-48F3-B9F3-FFDE34644202}
 		{8073CCC5-B114-4ABE-8711-F34A56D65665} = {69BB78FE-DFB9-48F3-B9F3-FFDE34644202}
+		{7DF60769-F26F-4A7F-BD54-7C828F03424D} = {69BB78FE-DFB9-48F3-B9F3-FFDE34644202}
 		{B37C8614-5796-40BE-B451-C6671461603C} = {BE49D4B6-A2BD-4414-8F18-6EE7583A7AC0}
 	EndGlobalSection
 EndGlobal

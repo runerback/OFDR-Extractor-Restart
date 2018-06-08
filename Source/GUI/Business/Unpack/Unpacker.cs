@@ -70,14 +70,18 @@ namespace OFDRExtractor.GUI.Business.Unpack
 					return;
 
 				if (report)
-					reporter.Report("extracting " + file.Name);
+					reporter.Report(
+						string.Format("extracting {0}, {1} remainder", file.Name, total - current));
 
 				try
 				{
 					extractor.Extract(file.Source).Wait();
 				}
-				catch(Exception exp)
+				catch (Exception exp)
 				{
+					if (report)
+						reporter.Report("extract failed: " + file.Name);
+
 					exceptions.Add(Tuple.Create(file.Name, exp));
 				}
 

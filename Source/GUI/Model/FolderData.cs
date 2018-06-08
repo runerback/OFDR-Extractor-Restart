@@ -1,4 +1,5 @@
-﻿using OFDRExtractor.Model;
+﻿using OFDRExtractor.GUI.Business;
+using OFDRExtractor.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -25,17 +26,31 @@ namespace OFDRExtractor.GUI.Model
 				.ThenBy(item => item.Filename)
 				.Select(item => new FileData(item))
 				.ToArray();
-			this.subFolders = folder.Folders
-				.OrderBy(item => item.Name)
-				.Select(item => new FolderData(item, this))
-				.ToArray();
+			if (folder.Name == "data_win")
+			{
+				this.subFolders = folder.Folders
+					.OrderBy(item => item.Name)
+					.Select(item => new FolderData(item, this))
+					.ToArray();
+			}
+			else
+			{
+				this.subFolders = new FolderData[0];
+			}
 
 			this.hasAnyFiles = new Business.FileDataEnumerable(this).Any();
-			if (!this.hasAnyFiles)
-				this.IsSelected = true;
 
 			this.selecableManager = new Business.SelectableManager(this);
 			this.selecableManager.InternalSelectionChanged += onSelectionChanged;
+
+			if (folder.Name == "data_win")
+			{
+				foreach (var xxx in new SelectableManagerEnumerable(this))
+					Console.WriteLine("{0, 20}: all - {1}, any - {2}",
+						((Business.SelectableManager)xxx).source.name,
+						xxx.IsAllSelected,
+						xxx.IsAnySelected);
+			}
 		}
 
 		private readonly NFSFolder source;
@@ -128,14 +143,34 @@ namespace OFDRExtractor.GUI.Model
 				target = target.parentFolder;
 			}
 		}
-
+		private static int i = 0;
+		private const int t1 = 22;
+		private const int t2 = 12;
+		private static int t = t1;
 		private void updateFolderSelectionState()
 		{
+			Console.WriteLine("updateFolderSelectionState: {0}", this.name);
+
 			bool allSelected = true;
 			bool anySelected = false;
 
+			if (i++ == t && t == t1)
+			{
+				i = 0;
+				t = t2;
+			}
+
+
+			//TODO: this is just rubbish
 			foreach (var manager in new Business.SelectableManagerEnumerable(this))
 			{
+				if (manager == this.selecableManager) continue;
+				//Console.WriteLine("({0}) {1}: all - {2}, any - {3}",
+				//	i,
+				//	((Business.SelectableManager)manager).source.name,
+				//	manager.IsAllSelected,
+				//	manager.IsAnySelected);
+
 				if (allSelected && !manager.IsAllSelected)
 				{
 					allSelected = false;

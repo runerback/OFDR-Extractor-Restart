@@ -13,12 +13,29 @@ namespace OFDRExtractor.GUI.Business
 			if (source == null)
 				throw new ArgumentNullException("source");
 
+			//check whether source is empty
+			if (!new FileDataEnumerable(source).Any())
+			{
+				this.isAnySelected = true;
+				this.isAllSelected = true;
+				this.selectedFilesCount = 0;
+				this.hasSource = false;
+				return;
+			}
+
+			this.selectedFiles = new HashSet<Model.FileData>();
 			this.source = source;
 			foreach (var selectable in new SelectableEnumerable(source, false))
 				selectable.IsSelectedChanged += onIsSelectedChanged;
 		}
 
-		private readonly Model.FolderData source;
+		public readonly Model.FolderData source;
+
+		private bool hasSource = true;
+		public bool HasSource
+		{
+			get { return this.hasSource; }
+		}
 		
 		private void onIsSelectedChanged(object sender, EventArgs e)
 		{
@@ -52,33 +69,19 @@ namespace OFDRExtractor.GUI.Business
 			var isAnySelected = false;
 
 			var selectedFiles = this.selectedFiles;
-			//using (var selectedIterator = this.source.Selectables.GetEnumerator())
-			//{
-			//    while (selectedIterator.MoveNext())
-			//    {
-			//        var current = selectedIterator.Current;
-			//        if (!(current.IsSelected ?? false))
-			//        {
-			//            if (isAllSelected)
-			//                isAllSelected = false;
 
-			//            if (current is Model.FileData)
-			//                selectedFiles.Remove((Model.FileData)current);
-			//        }
-			//        else
-			//        {
-			//            if (!isAnySelected)
-			//                isAnySelected = true;
+			var files = this.source.Files;
 
-			//            if (current is Model.FileData)
-			//                selectedFiles.Add((Model.FileData)current);
-			//        }
-			//    }
-			//}
+			if (!files.Any()) 
+				return true;
 
-			using (var fileIterator = this.source.Files.GetEnumerator())
+			using (var fileIterator = files.GetEnumerator())
 			{
-				while (fileIterator.MoveNext())
+				bool hasNext = fileIterator.MoveNext();
+				if (!hasNext)
+					isAnySelected = true;
+
+				while (hasNext)
 				{
 					var current = fileIterator.Current;
 					if (!(current.IsSelected ?? false))
@@ -95,6 +98,7 @@ namespace OFDRExtractor.GUI.Business
 
 						selectedFiles.Add((Model.FileData)current);
 					}
+					hasNext = fileIterator.MoveNext();
 				}
 			}
 
@@ -162,8 +166,8 @@ namespace OFDRExtractor.GUI.Business
 		}
 
 		#endregion SelectedFilesCount
-		
-		private readonly HashSet<Model.FileData> selectedFiles = new HashSet<Model.FileData>();
+
+		private readonly HashSet<Model.FileData> selectedFiles;
 		public IEnumerable<Model.FileData> SelectedFiles
 		{
 			get { return this.selectedFiles; }
@@ -191,8 +195,11 @@ namespace OFDRExtractor.GUI.Business
 			if (disposed) return;
 			if (disposing)
 			{
-				foreach (var selectable in new SelectableEnumerable(this.source, false))
-					selectable.IsSelectedChanged -= onIsSelectedChanged;
+				if (this.source != null)
+				{
+					foreach (var selectable in new SelectableEnumerable(this.source, false))
+						selectable.IsSelectedChanged -= onIsSelectedChanged;
+				}
 			}
 			this.disposed = true;
 		}

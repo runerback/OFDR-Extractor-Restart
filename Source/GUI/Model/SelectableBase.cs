@@ -31,6 +31,7 @@ namespace OFDRExtractor.GUI.Model
 			{
 				this.isSelected = value;
 				NotifyPropertyChanged("IsSelected");
+				onPreviewIsSelectedChanged();
 				return true;
 			}
 			return false;
@@ -42,5 +43,7 @@ namespace OFDRExtractor.GUI.Model
 			if (IsSelectedChanged != null)
 				IsSelectedChanged(this, EventArgs.Empty);
 		}
+
+		protected virtual void onPreviewIsSelectedChanged() { }
 	}
 }
