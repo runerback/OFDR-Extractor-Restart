@@ -25,5 +25,8 @@
 //unpack operation block the UI, put to task queue.
 //show checkbox of root folder only when any files checked, or it will cost a long time. (resolve in later)
 //-------------------------------update 6-----------------------------------------------//
-//set WorkingDirectory on ExtractorInvoker
+//set WorkingDirectory on ExtractorInvoker (discard)
 //folder shows not select all when any empty inner folder
+//-------------------------------update 7-----------------------------------------------//
+//there are some files cannot be unpacked, get the list then check what's the problem.
+//check whether these files can be unpacked via directly call.

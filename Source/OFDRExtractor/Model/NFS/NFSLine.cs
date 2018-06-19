@@ -35,7 +35,7 @@ namespace OFDRExtractor.Model
 
 		private int order;
 		/// <summary>
-		/// order of file or folder with same name in win_000.nfs
+		/// order of file or folder with same name in win_000.nfs. start from 0.
 		/// </summary>
 		/// <remarks>
 		/// such as 'xxxfile'(0), 'xxxfile'(1). this will be used in dat.exe when extracting to locate a file.

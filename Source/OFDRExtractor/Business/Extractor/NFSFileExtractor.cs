@@ -50,7 +50,7 @@ namespace OFDRExtractor.Business
 
 		private Task extractFile(NFSFile file)
 		{
-			//order start from 1 in extractor, and hide if first.
+			//order start from 1 in extractor, and hide if it's first file.
 			//such as for first xxx.xxx use origin name, for second use xxx.xxx 2
 			
 			//this.invoker.Invoke(

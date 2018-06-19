@@ -30,6 +30,17 @@ namespace OFDRExtractor.UnitTest
 			this.nfsRoot = root;
 		}
 
+		[TestMethod]
+		public void RepeatFileTest()
+		{
+			var root = this.nfsRoot;
+			var audio = root.Folders
+				.First(item => item.Name.Equals("audio", StringComparison.OrdinalIgnoreCase));
+			var amb_day = audio.Files
+				.First(item => item.Name.Equals("amb_day.fsb", StringComparison.OrdinalIgnoreCase));
+			Assert.AreEqual(1, amb_day.Order);
+		}
+
 		private static readonly string filename = "nsf_root.xml";
 
 		[TestMethod]

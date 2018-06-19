@@ -28,6 +28,15 @@ namespace OFDRExtractor.Model
 			this.files.Add(file);
 		}
 
+		private void RemoveLastFile()
+		{
+			var files = this.files;
+			var count = files.Count;
+			if (count == 0)
+				throw new InvalidOperationException("cannot remove file from empty sequence");
+			files.RemoveAt(count - 1);
+		}
+
 		private List<NFSFolder> folders = new List<NFSFolder>();
 		public IEnumerable<NFSFolder> Folders
 		{
@@ -166,6 +175,7 @@ namespace OFDRExtractor.Model
 
 				NFSFolder currentFolder = null;
 				string previousFolderName = null;
+				string previousFileName = null;
 				foreach (var line in lines)
 				{
 					raiseProgressChanged(current++ / total, string.Format("reading \"{0}\"", line));
@@ -182,6 +192,7 @@ namespace OFDRExtractor.Model
 						currentFolder = new NFSFolder(folderIndex++, folderName);
 						yield return currentFolder;
 
+						previousFileName = null;
 						fileIndex = 0;
 
 						continue;
@@ -200,6 +211,16 @@ namespace OFDRExtractor.Model
 						int order = getFileOrder(name);
 
 						var file = new NFSFile(filename, extension, currentFolder, fileIndex++, order, name, size);
+						
+						//if there are two same file one by one, unpack first one will get an empty file.
+						if (string.Equals(previousFileName, name, StringComparison.OrdinalIgnoreCase))
+						{
+							Console.WriteLine(name);
+							currentFolder.RemoveLastFile();
+						}
+						else
+							previousFileName = name;
+						
 						currentFolder.Add(file);
 						continue;
 					}

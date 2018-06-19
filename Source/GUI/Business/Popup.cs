@@ -155,7 +155,6 @@ namespace OFDRExtractor.GUI
 				this.pageIndex = 0;
 				NotifyPropertyChanged("PageIndex");
 			}
-
 		}
 	}
 }
