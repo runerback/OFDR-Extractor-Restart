@@ -30,3 +30,6 @@
 //-------------------------------update 7-----------------------------------------------//
 //there are some files cannot be unpacked, get the list then check what's the problem.
 //check whether these files can be unpacked via directly call.
+//-------------------------------update 8-----------------------------------------------//
+//check whether all 'mission.xml' can be unpacked properly, if true,
+//when file with order greater than 0 unpack failed, unpack with default order 0.

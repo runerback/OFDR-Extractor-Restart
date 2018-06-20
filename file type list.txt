@@ -1,0 +1,34 @@
+* means not sure
+
+.ambx_bn	-*	
+.anim		-*	animation for camera (ui and in-game)
+.bat		-	normal bat file, only one file: make_lang.bat
+.bik		-	bink video file
+.bin		-*	database file for animation
+.bm			-*	animation for in-game model, such as soldier and vehicle
+.cap		-*	index data of caption in lng file
+.cursor		-	normal cursor file
+.dat		-	include mission_image.dat (encrypted cover image of mission, similar to .fui file format) and templates.dat (data from database.xml of mission editor)
+.dds		-*	normal dds file, but not used in game as texture
+.doa		-*	
+.fev		-	fmod audio events file
+.fpo		-*	fragment program objects
+.fsb		-	fmd sample bank format file
+.fui		-	swf file, some file is just image data, but others are complicated
+.hints		-*	some hint data for AI to take cover when in dander
+.hkx*		-	havok xml model file
+.ib			-	model index buffer, can get vertext count form this file
+.jpk		-*	
+.lng		-	game ui language file
+.lub		-	pre-compiled lua file
+.met*		-	model metadata of vb and ib file, most of them include many parts in a single file obviously
+.nefx		-	some effects file (fx)
+.nmesh		-*	navigation mesh data for building, large objects and tree
+.prefs		-*	only one file: game.prefs
+.rfo		-	AI rules data, only one file: rulesystem.rfo
+.stf		-	texture file, can convert to/from dds file (there are some unknown data in header part, but stf file without these data still work, so a common converter is possible)
+.tpk*		-	terrain package
+.txt		-	normal text file
+.vb			-	model vertex buffer, but dont know the length of each vertext
+.vpo*		-	vertex program objects
+.xml		-	normal xml file

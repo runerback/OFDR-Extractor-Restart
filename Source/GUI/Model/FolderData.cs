@@ -22,8 +22,8 @@ namespace OFDRExtractor.GUI.Model
 			this.description = folder.ToString();
 
 			this.files = folder.Files
-				.OrderBy(item => item.Extension)
-				.ThenBy(item => item.Filename)
+				//.OrderBy(item => item.Extension)
+				//.ThenBy(item => item.Filename) //keep origin file order
 				.Select(item => new FileData(item, this))
 				.ToArray();
 			this.subFolders = folder.Folders

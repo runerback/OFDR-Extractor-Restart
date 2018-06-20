@@ -22,8 +22,8 @@ namespace OFDRExtractor.Model
 					@"^(?<folder>[^.:]+)\s+0$",
 					RegexOptions.Compiled);
 			private readonly Regex fileRegex = new Regex(
-					@"^(?<file>(?<filename>.*?)\.(?<extension>.*?))\s+(?<size>\d+)$",
-					RegexOptions.Compiled);
+					@"^(?<file>(?<filename>.*)\.(?<extension>.*?))\s+(?<size>\d+)$",
+					RegexOptions.Compiled); //some file have mutiple '.'
 
 			public IEnumerable<NFSFolder> Read()
 			{
@@ -83,13 +83,9 @@ namespace OFDRExtractor.Model
 						long.TryParse(groups["size"].Value, out size);
 						int order = getFileOrder(name, size);
 
-						//if there are two same file one by one, unpack first one will get an empty file.
+						//if there are two same file in same folder, unpack first one will get an empty file.
 						if (string.Equals(previousFileName, name, StringComparison.OrdinalIgnoreCase))
-						{
-							Console.WriteLine(name);
 							currentFolder.RemoveLastFile();
-							order++; //the order is kept with first file, so increase here
-						}
 						else
 							previousFileName = name;
 
@@ -103,23 +99,27 @@ namespace OFDRExtractor.Model
 			private readonly Dictionary<string, NFSFileOrderData> fileOrderMap =
 				new Dictionary<string, NFSFileOrderData>();
 
-			private int getFileOrder(string name, long size)
+			private int getFileOrder(string fileName, long size)
 			{
-				if (string.IsNullOrEmpty(name) || size <= 0)
+				if (string.IsNullOrEmpty(fileName) || size <= 0)
 					return 0;
 
 				var map = this.fileOrderMap;
-				var key = name.ToLower();
+				var key = fileName.ToLower();
 
 				NFSFileOrderData existsOrderData;
 				if (map.TryGetValue(key, out existsOrderData))
 				{
-					//if two files have same name and size but different folder, 
+					//[[if two files have same name and size but different folder, 
 					//it's just the same file in different folder,
 					//so keep order (the unpacker can't find the 'second' file)
-					//if they are in same folder, handle outside
-					if (existsOrderData.Size != size)
-						existsOrderData.IncreaseOrder();
+					//if they are in same folder, handle outside]]
+					//if (existsOrderData.Size != size)
+					//	existsOrderData.IncreaseOrder();
+
+					//[[when unpack failed, use default order 0.
+					//so ignore size when check repeat file]]
+					existsOrderData.IncreaseOrder();
 					return existsOrderData.Order;
 				}
 

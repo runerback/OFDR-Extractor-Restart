@@ -23,7 +23,8 @@
                 Foreground="WhiteSmoke" 
                 Style="{StaticResource H3}" 
                 HorizontalAlignment="Left" 
-                VerticalAlignment="Center" />
+                VerticalAlignment="Center"
+                Margin="6 0 0 0" />
         </controls:WindowTitleBar>
 
             <views:FileDataView 

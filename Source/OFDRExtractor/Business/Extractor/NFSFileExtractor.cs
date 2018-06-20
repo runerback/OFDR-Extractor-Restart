@@ -32,11 +32,44 @@ namespace OFDRExtractor.Business
 			if (file == null)
 				throw new ArgumentNullException("file");
 
-			return extractFile(file)
+			//return extractFile(file)
+			//	.ContinueWith(t =>
+			//	{
+			//		if (t.IsFaulted)
+			//			throw t.Exception.Flatten();
+
+			//		string destFolder = checkDirectory(file);
+			//		moveFile(file, destFolder);
+			//	});
+
+			string filename;
+			if (file.Order > 0)
+				filename = string.Format("{0} {1}", file.Name, file.Order + 1);
+			else
+				filename = file.Name;
+
+			return unpackFile(filename)
 				.ContinueWith(t =>
 				{
 					if (t.IsFaulted)
-						throw t.Exception.Flatten();
+					{
+						if (file.Order > 0)
+						{
+							try
+							{
+								//retry with default order 0
+								unpackFile(file.Name).Wait();
+							}
+							catch
+							{
+								throw;
+							}
+						}
+						else
+						{
+							throw t.Exception.Flatten();
+						}
+					}
 
 					string destFolder = checkDirectory(file);
 					moveFile(file, destFolder);
@@ -48,6 +81,7 @@ namespace OFDRExtractor.Business
 		private InvokeResult result = null;
 		private AutoResetEvent nfsReadBlock;
 
+		[Obsolete("use `unpackFile` method instead")]
 		private Task extractFile(NFSFile file)
 		{
 			//order start from 1 in extractor, and hide if it's first file.
@@ -61,6 +95,27 @@ namespace OFDRExtractor.Business
 				filename = string.Format("{0} {1}", file.Name, file.Order + 1);
 			else
 				filename = file.Name;
+
+			return unpackFile(filename);
+			//this.invoker.Invoke(filename);
+
+			//this.nfsReadBlock = new AutoResetEvent(false);
+			//return Task.Factory.StartNew(() =>
+			//{
+			//	this.nfsReadBlock.WaitOne();
+			//	this.nfsReadBlock.Dispose();
+			//	this.nfsReadBlock = null;
+
+			//	this.working = false;
+
+			//	var result = this.result;
+			//	if (result.HasError)
+			//		throw new Exception("error occurred while extract nfs file: " + result.Error);
+			//});
+		}
+
+		private Task unpackFile(string filename)
+		{
 			this.invoker.Invoke(filename);
 
 			this.nfsReadBlock = new AutoResetEvent(false);

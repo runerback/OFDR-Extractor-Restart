@@ -19,6 +19,7 @@ namespace OFDRExtractor.UnitTest
 		}
 
 		[TestInitialize]
+		[TestMethod]
 		public void ReadNFSRoot()
 		{
 			var lines = File.ReadAllLines("lines.txt");
@@ -28,6 +29,17 @@ namespace OFDRExtractor.UnitTest
 			Assert.IsNotNull(root);
 			Assert.IsTrue(root.Folders.Any());
 			this.nfsRoot = root;
+		}
+
+		[TestMethod]
+		public void ListAllFileExtension()
+		{
+			var root = this.nfsRoot;
+			HashSet<string> set = new HashSet<string>(EqualityComparer<string>.Default);
+			foreach (var ext in root.Folders.SelectMany(folder => folder.Files.Select(file => file.Extension.ToLower())))
+				set.Add(ext);
+			foreach (var ext in set.OrderBy(item => item))
+				Console.WriteLine("." + ext);
 		}
 
 		[TestMethod]
@@ -62,6 +74,85 @@ namespace OFDRExtractor.UnitTest
 
 			Assert.AreEqual(freelook1.Order, freelook2.Order);
 		}
+
+		[TestMethod]
+		//list all repeat files
+		public void RepeatFileTest3()
+		{
+			var root = this.nfsRoot;
+			foreach (var group in root.Folders
+				.SelectMany(folder => folder.Files
+					.Select(file => new RepeatFileData(file.Name, file.Size, folder.Name)))
+				.GroupBy(item => item, RepeatFileData.Comparer))
+			{
+				using (var iterator = group.GetEnumerator())
+				{
+					if (!iterator.MoveNext() || !iterator.MoveNext()) continue;
+				}
+
+				Console.WriteLine();
+				foreach (var data in group)
+					Console.WriteLine(data);
+			}
+			Console.WriteLine();
+		}
+
+		sealed class RepeatFileData
+		{
+			public RepeatFileData(string filename, long filesize, string foldername)
+			{
+				this.fileName = filename;
+				this.fileSize = filesize;
+				this.folderName = foldername;
+
+				this.hashcode = filename.ToLower().GetHashCode() ^ filesize.GetHashCode();
+			}
+
+			private string fileName;
+			public string FileName
+			{
+				get { return this.fileName; }
+			}
+
+			private long fileSize;
+			public long FileSize
+			{
+				get { return this.fileSize; }
+			}
+
+			private string folderName;
+			public string FolderName
+			{
+				get { return this.folderName; }
+			}
+
+			private readonly int hashcode;
+
+			public override string ToString()
+			{
+				return string.Format("{0} - {1} {2}", 
+					folderName, 
+					fileName, 
+					fileSize);
+			}
+
+			public static readonly IEqualityComparer<RepeatFileData> Comparer = new RepeatFileDataComparer();
+
+			sealed class RepeatFileDataComparer : IEqualityComparer<RepeatFileData>
+			{
+				bool IEqualityComparer<RepeatFileData>.Equals(RepeatFileData x, RepeatFileData y)
+				{
+					return x == null ? y == null : x.hashcode == y.hashcode;
+				}
+
+				int IEqualityComparer<RepeatFileData>.GetHashCode(RepeatFileData obj)
+				{
+					if (obj == null) return 0;
+					return obj.hashcode;
+				}
+			}
+		}
+
 
 		private static readonly string filename = "nsf_root.xml";
 

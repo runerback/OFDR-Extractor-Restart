@@ -7,9 +7,10 @@ ai/globalknowledge
 ai/coverhints/dynamic/placeables
 ai/coverhints/dynamic/vehicles
 ai/doa/objects
-ai/doa/navmeshes
-ai/doa/quadtrees
-ai/rulesystem/sweeppatterns
+ai/navmeshes
+ai/quadtrees
+ai/rulesystem
+ai/sweeppatterns
 audio/speech
 cutscenes/prologue/scripts
 missions/default/inf0
