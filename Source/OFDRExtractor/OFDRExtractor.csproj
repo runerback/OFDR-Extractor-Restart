@@ -59,6 +59,7 @@
     <Compile Include="Model\IName.cs" />
     <Compile Include="Model\NFS\NFSFile.cs" />
     <Compile Include="Model\NFS\NFSFolder.cs" />
+    <Compile Include="Model\NFS\NFSFoldersReader.cs" />
     <Compile Include="Model\NFS\NFSLine.cs" />
     <Compile Include="Business\FolderSerializer.cs" />
     <Compile Include="Model\NFS\NFSFolderBranch.cs" />

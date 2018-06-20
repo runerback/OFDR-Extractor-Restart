@@ -31,6 +31,7 @@ namespace OFDRExtractor.UnitTest
 		}
 
 		[TestMethod]
+		//same name, size and folder, repeat 2 times
 		public void RepeatFileTest()
 		{
 			var root = this.nfsRoot;
@@ -39,6 +40,27 @@ namespace OFDRExtractor.UnitTest
 			var amb_day = audio.Files
 				.First(item => item.Name.Equals("amb_day.fsb", StringComparison.OrdinalIgnoreCase));
 			Assert.AreEqual(1, amb_day.Order);
+		}
+
+		[TestMethod]
+		//same name and size but different folder
+		public void RepeatFileTest2()
+		{
+			var root = this.nfsRoot;
+
+			string filename = "freelook.xml";
+
+			var actionmap = root.Folders
+				.First(item => item.Name.Equals("actionmap", StringComparison.OrdinalIgnoreCase));
+			var freelook1 = actionmap.Files
+				.First(item => item.Name.Equals(filename, StringComparison.OrdinalIgnoreCase));
+
+			var legacy = root.Folders
+				.First(item => item.Name.Equals("legacy", StringComparison.OrdinalIgnoreCase));
+			var freelook2 = legacy.Files
+				.First(item => item.Name.Equals(filename, StringComparison.OrdinalIgnoreCase));
+
+			Assert.AreEqual(freelook1.Order, freelook2.Order);
 		}
 
 		private static readonly string filename = "nsf_root.xml";
